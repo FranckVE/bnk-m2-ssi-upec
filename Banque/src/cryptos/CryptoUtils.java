@@ -1,14 +1,26 @@
 package cryptos;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
  
 public class CryptoUtils {
 
@@ -232,6 +244,138 @@ public static boolean verify ( String challenge, byte []  signature , RSAPublicK
  return false;
 	
 }
+
+public static byte []aencRSA (byte [] plainText, RSAPublicKey pubKey ) {
+    Cipher cipher;
+    byte[]cipherText=null;
+   // Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+try {
+   
+	cipher = Cipher.getInstance("RSA");   
+    cipher.init(Cipher.ENCRYPT_MODE, pubKey);   
+    cipherText = new byte[plainText.length];   
+    
+   
+       if(plainText.length > cipher.getBlockSize())
+       
+       {
+           System.out.println("BigBlockSize :"+plainText.length); 
+         cipherText= cipherBigBlockSize(plainText, pubKey ); 
+           
+       }
+       else
+         cipherText= cipher.doFinal(plainText); 
+  
+ // s = concat(cipherText);
+   return cipherText;
+   
+} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
+   Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+}
+return cipherText;
+
+}
+public static byte [] cipherBigBlockSize(byte [] buffer , RSAPublicKey publickey ){
+    
+    byte[] raw=null;
+    try {
+       // Chiffrement du document
+      // Seul le mode ECB est possible avec RSA
+      Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+      // publickey est la cle publique du destinataire
+      cipher.init(Cipher.ENCRYPT_MODE, publickey);
+      int blockSize = cipher.getBlockSize();
+      int outputSize = cipher.getOutputSize(buffer.length);
+      int leavedSize = buffer.length % blockSize;
+      int blocksSize = leavedSize != 0 ?
+      buffer.length / blockSize + 1 : buffer.length / blockSize;
+      raw = new byte[outputSize * blocksSize];
+      int i = 0;
+      while (buffer.length - i * blockSize > 0)
+      {
+              if (buffer.length - i * blockSize > blockSize)
+                      cipher.doFinal(buffer, i * blockSize, blockSize,
+                                     raw, i * outputSize);
+              else
+                      cipher.doFinal(buffer, i * blockSize,
+                                     buffer.length - i * blockSize,
+                                     raw, i * outputSize);
+              i++;
+      }
+
+     
+   } catch (ShortBufferException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException ex) {
+       Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+   }
+
+   return raw ;
+}
+
+
+public static byte [] adecRSA (byte []cipherText, RSAPrivateKey privKey ){
+  //  Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+    //ici on recupère un tableau de bytes décodé en base64 
+    
+    byte []plainText=null;         
+try {
+      
+     int length=cipherText.length; 
+     plainText = new byte[length];
+    
+    //initialisation 
+    //Cipher cipher = Cipher.getInstance("RSA","BC");
+     Cipher cipher = Cipher.getInstance("RSA");
+    cipher.init(Cipher.DECRYPT_MODE, privKey);
+    
+    //déchiffrement
+//    for( int i=0;i<length;i++){
+        if(cipherText.length>cipher.getBlockSize())
+          plainText= decipherBigBlockSize(cipherText,privKey );
+            else
+          plainText= cipher.doFinal(cipherText);
+//     }
+    System.out.println("\nEND decryption RSA");
+} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException   ex) {
+    Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+}
+    
+   
+
+    return  plainText;
+}
+public static byte [] decipherBigBlockSize(byte [] raw , RSAPrivateKey privKey ){
+
+ ByteArrayOutputStream bout=null;
+ try {
+    // Déchiffrement du fichier
+   Cipher  cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");           
+   cipher.init(cipher.DECRYPT_MODE, privKey);
+   int blockSize = cipher.getBlockSize();
+   bout = new ByteArrayOutputStream(64);
+   int j = 0;
+
+   while (raw.length - j * blockSize > 0)
+   {
+           bout.write(cipher.doFinal(raw, j * blockSize, blockSize));
+           j++;
+   }
+
+   
+   return bout.toByteArray();
+} catch (IllegalBlockSizeException | BadPaddingException | IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException ex) {
+    Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+}
+return bout.toByteArray();   
+}
+
+
+
+
+
+
+
+
+
 
 public static void main (String [] args ) {
 	
