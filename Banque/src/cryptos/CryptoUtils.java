@@ -24,8 +24,8 @@ import javax.crypto.ShortBufferException;
  
 public class CryptoUtils {
 
-RSAPublicKey pubKey ;
-RSAPrivateKey privKey ;
+static RSAPublicKey pubKey ;
+static RSAPrivateKey privKey ;
 
 
 
@@ -65,9 +65,6 @@ public static String digest( String message ){
 		for (byte b : digest) {
 			sb.append(Integer.toHexString((int) (b & 0xff)));
 		}
-
-		
-		
 		
 		
 	} catch (NoSuchAlgorithmException e) {
@@ -80,7 +77,6 @@ public static String digest( String message ){
  
 	
 }
-
 
 //cette méthode permet de comparer deux strings, elle nous servireapour comparer les données données par l'utilisateur avec celles stockées dans la base de données
 public static boolean compare ( String message1 , String message2 ){
@@ -99,7 +95,6 @@ public static boolean compare ( String message1 , String message2 ){
 		 
 }
  
-
 // Cette méthode permet de signer un challenge, les deux seront envoyé afin d'assurer l'authenticité du message
 public static String sign1 (String challenge , RSAPrivateKey privKey){	
 	 
@@ -245,13 +240,13 @@ public static boolean verify ( String challenge, byte []  signature , RSAPublicK
 	
 }
 
-public static byte []aencRSA (byte [] plainText, RSAPublicKey pubKey ) {
+public static byte []aencRSA (byte [] plainText, RSAPublicKey pubKey ) throws NoSuchProviderException {
     Cipher cipher;
     byte[]cipherText=null;
-   // Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+   Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 try {
    
-	cipher = Cipher.getInstance("RSA");   
+	cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");   
     cipher.init(Cipher.ENCRYPT_MODE, pubKey);   
     cipherText = new byte[plainText.length];   
     
@@ -259,12 +254,13 @@ try {
        if(plainText.length > cipher.getBlockSize())
        
        {
-           System.out.println("BigBlockSize :"+plainText.length); 
-         cipherText= cipherBigBlockSize(plainText, pubKey ); 
+           System.out.println("  plainTextSize > BigBlockSize :"+plainText.length+">"+cipher.getBlockSize()); 
+           cipherText= cipherBigBlockSize(plainText, pubKey, cipher ); 
            
        }
        else
          cipherText= cipher.doFinal(plainText); 
+       System.out.println("RSA encrypted Text : "+new String(cipherText));
   
  // s = concat(cipherText);
    return cipherText;
@@ -275,15 +271,11 @@ try {
 return cipherText;
 
 }
-public static byte [] cipherBigBlockSize(byte [] buffer , RSAPublicKey publickey ){
+private static byte [] cipherBigBlockSize(byte [] buffer , RSAPublicKey publickey, Cipher cipher ){
     
     byte[] raw=null;
     try {
-       // Chiffrement du document
-      // Seul le mode ECB est possible avec RSA
-      Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-      // publickey est la cle publique du destinataire
-      cipher.init(Cipher.ENCRYPT_MODE, publickey);
+        
       int blockSize = cipher.getBlockSize();
       int outputSize = cipher.getOutputSize(buffer.length);
       int leavedSize = buffer.length % blockSize;
@@ -304,13 +296,12 @@ public static byte [] cipherBigBlockSize(byte [] buffer , RSAPublicKey publickey
       }
 
      
-   } catch (ShortBufferException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException ex) {
+   } catch (ShortBufferException | IllegalBlockSizeException | BadPaddingException ex) {
        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
    }
 
    return raw ;
 }
-
 
 public static byte [] adecRSA (byte []cipherText, RSAPrivateKey privKey ){
   //  Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -335,6 +326,9 @@ try {
           plainText= cipher.doFinal(cipherText);
 //     }
     System.out.println("\nEND decryption RSA");
+    System.out.println("RSA decrypted Text : "+new String(plainText));
+     
+    
 } catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException   ex) {
     Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
 }
@@ -343,7 +337,7 @@ try {
 
     return  plainText;
 }
-public static byte [] decipherBigBlockSize(byte [] raw , RSAPrivateKey privKey ){
+private static byte [] decipherBigBlockSize(byte [] raw , RSAPrivateKey privKey ){
 
  ByteArrayOutputStream bout=null;
  try {
@@ -380,11 +374,26 @@ return bout.toByteArray();
 public static void main (String [] args ) {
 	
 	CryptoUtils util = new CryptoUtils() ;
-	util.initRSAKeys();
+	util.initRSAKeys();   
+	
+
 	String message = "ceci est un test" ;
 	util.digest(message);
 	byte []  signature = util.sign2(message, util.privKey);
 	util.verify(message, signature, util.pubKey);
+	
+	
+	
+	
+	byte[] cipherText;
+	try {
+		cipherText = util.aencRSA(message.getBytes(), pubKey);
+		util.adecRSA(cipherText, privKey);
+		
+	} catch (NoSuchProviderException e) {
+		 
+		e.printStackTrace();
+	}
 	
 	
 	
