@@ -22,7 +22,6 @@ xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/
   
   
   
- <!-- deuxième servelet -->  
  
   <servlet>
     <servlet-name>Jersey REST crypto Service</servlet-name>

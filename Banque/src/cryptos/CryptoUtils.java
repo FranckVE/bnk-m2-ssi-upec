@@ -21,6 +21,8 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
+
+import com.sun.jersey.core.util.Base64;
  
 public class CryptoUtils {
 
@@ -363,10 +365,44 @@ return bout.toByteArray();
 }
 
 
+/*********************** concat ******************/
+// avant de faire apel à cette méthode les éléments du tableau args doivent être convertis en byte [] chacun et insérer dans le tableau args
+// la valeur de retour doît être chiffrée  et transformée en base64 avant l'envoi
+public static String concat (byte[] [] args )  {
+    
+        String [] str = new String [args.length];
+        for(int i=0;i<args.length;i++)
+            str[i]=new String(Base64.encode(args[i]));
+        String s=str[0];
+        for(int i=1;i<str.length;i++)
+            s+="#"+str[i];
+        
+   System.out.println("Message (concat) : --->"+s) ;
+        return s;            
+         
+}
+
+/*********************** deconcat***********************/ 
+
+// Une fois le mesage reçu, one le décode en base64 ,on le déchiffré on obtient un log string en base64 avec des "##, on fait ensuite appel à notre méthode "deconcat", evec avoir les éléments chiffrés en clai
 
 
 
+public static byte [][] deconcat (String s) {
+        String [] tab = s.split("#");
+        byte [][] tab2 = new byte   [tab.length] []; 
+       // BASE64Decoder decoder = new BASE64Decoder();
+        for ( int i=0;i<tab.length;i++)
+            {
+        	
+        	tab2[i]= Base64.decode(tab[i]);
+        	System.out.println("Message "+i+" (deconcat) : --->"+new String(tab2[i])) ;
+            }
+         
+        
+        return tab2;
 
+}
 
 
 
@@ -385,10 +421,36 @@ public static void main (String [] args ) {
 	
 	
 	
-	byte[] cipherText;
+	byte[] cipherText1 ,cipherText2,cipherText3;
 	try {
-		cipherText = util.aencRSA(message.getBytes(), pubKey);
-		util.adecRSA(cipherText, privKey);
+		
+		
+		
+		// chiffrement 
+		cipherText1 = "test".getBytes();
+		cipherText2 ="Ali".getBytes();
+		cipherText3 = "Abdelleh".getBytes() ;
+		
+		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
+		
+		
+		String messg = concat(tab) ;
+		
+		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
+		
+		// déchiffrement
+		
+		byte [] tab4 = util.adecRSA(tab3, privKey);
+		byte [] [] tab5 = deconcat(new String(tab4)) ;
+		
+		
+		
+		 
+		
+		
+		
+		
+		
 		
 	} catch (NoSuchProviderException e) {
 		 
