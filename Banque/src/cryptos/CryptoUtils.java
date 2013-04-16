@@ -1,25 +1,41 @@
 package cryptos;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 
 import com.sun.jersey.core.util.Base64;
@@ -28,28 +44,63 @@ public class CryptoUtils {
 
 static RSAPublicKey pubKey ;
 static RSAPrivateKey privKey ;
+static SecretKey secretKey ;
 
 
+
+
+
+
+
+
+public boolean fileExists ( String path){
+	
+	
+	File file = new File(path);
+	if (file.exists())
+		return true ;
+	else return false;
+}
+
+
+//génération de paire de clés RSA
+
+public void generateKeyPairs(){
+	
+		KeyPairGenerator keyGen;
+			try {
+				
+				keyGen = KeyPairGenerator.getInstance("RSA");
+				keyGen.initialize(1024);
+				KeyPair keyPair = keyGen.genKeyPair() ;
+				
+				//pubKey generation and storing 
+				    pubKey = (RSAPublicKey) keyPair.getPublic();		    
+				    this.storePublicKeyEncoded("pubKeyBanque.key", pubKey);
+				    
+				  //privKey generation and storing 
+				    
+				    privKey = (RSAPrivateKey) keyPair.getPrivate() ;
+				    this.storePrivateKeyEncoded("privKeyBanque.key", privKey);
+				   // storePrivKeyKeyStore(privKey);
+				    
+		System.out.println("pubKey (pubKeyBanque.key): -> "+new String(pubKey.getEncoded()));	
+		System.out.println("privKey (privKeyBanque.key): -> "+new String(privKey.getEncoded()));	
+				    
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}  
 
 //Cette méthode permet d'initialiser nos deux clés de type RSA
  void initRSAKeys() {
-	KeyPairGenerator keyGen;
-	try {
+	 
+	if( fileExists ("pubKeyBanque.key") && fileExists ("pubKeyBanque.key"))  
+		return ;
+	else
+		generateKeyPairs();
 		
-		keyGen = KeyPairGenerator.getInstance("RSA");
-		keyGen.initialize(1024);
-		KeyPair keyPair = keyGen.genKeyPair() ;
-		    pubKey = (RSAPublicKey) keyPair.getPublic();
-		    privKey = (RSAPrivateKey) keyPair.getPrivate() ;
-		    
-System.out.println("pubKey : -> "+new String(pubKey.getEncoded()));	
-System.out.println("privKey : -> "+new String(privKey.getEncoded()));	
-		    
-	} catch (NoSuchAlgorithmException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-   
 }
 
 //cette méthode permet de retourner le hash d'un message, ce hash sera comparé à celui dans la base de données	
@@ -158,8 +209,7 @@ public static byte []  sign2 (String challenge , RSAPrivateKey privKey){
 
 //Cette méthode prend en paramètres un challenge et sa signature et vérifie l'authenticité de cett dernière
 public static boolean verify ( String challenge, String signature , RSAPublicKey pubKey){
-	
-	
+
  
     Signature myVerifySign;
 	try {
@@ -386,8 +436,6 @@ public static String concat (byte[] [] args )  {
 
 // Une fois le mesage reçu, one le décode en base64 ,on le déchiffré on obtient un log string en base64 avec des "##, on fait ensuite appel à notre méthode "deconcat", evec avoir les éléments chiffrés en clai
 
-
-
 public static byte [][] deconcat (String s) {
         String [] tab = s.split("#");
         byte [][] tab2 = new byte   [tab.length] []; 
@@ -405,12 +453,230 @@ public static byte [][] deconcat (String s) {
 }
 
 
+/********************* generateDESSecretKey ****************/
+
+private SecretKey generateAESSecretKey(int keySize) {
+        SecretKey key=null;
+    
+    try {
+            KeyGenerator keyGen1 = KeyGenerator.getInstance("AES");
+            keyGen1.init(keySize);
+            key = keyGen1.generateKey();
+            System.out.println("\nGeneration de clé AES (128 bits)");
+            return key;
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return key;
+    }
+
+/******************** initAESKey()   *****************/
+
+public SecretKey initAES128(){
+	
+	
+	return generateAESSecretKey(128);
+}
+
+
+
+/*************************  encAES128()   ******************************/
+
+public static byte [] encAES128 (byte [] plainText, SecretKey AESKey ) {
+    Cipher cipher;
+    byte[] cipherText=null;
+try {
+   cipher = Cipher.getInstance("AES");            
+   cipher.init(Cipher.ENCRYPT_MODE, AESKey);
+   
+  cipherText = new byte[plainText.length];
+  System.out.println("\nStart encryption AES128");
+  
+  cipherText= cipher.doFinal(plainText);  
+  System.out.println("encAES128 : ---> "+new String(cipherText));
+   return cipherText;
+   
+} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
+   Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+}
+return cipherText;
+
+}
+
+
+/**************************** decAES128() ********************************/
+
+public static byte [] decAES128 (byte [] cipheredText, SecretKey AESKey ) {
+	  Cipher cipher;
+	    byte[] plainText=null;
+	try {
+	   cipher = Cipher.getInstance("AES");            
+	   cipher.init(Cipher.DECRYPT_MODE, AESKey);
+	   
+	  plainText = new byte[cipheredText.length];
+	  System.out.println("\nStart decryption AES128");
+	  
+	  plainText= cipher.doFinal(cipheredText);  
+	  System.out.println("decAES128 : ---> "+new String(plainText));
+	   return plainText;
+	   
+	} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
+	   Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+	}
+	return plainText;
+
+	}
+
+/**************************** storePublicKeyEncoded  ****************************/
+
+public static void storePublicKeyEncoded(String path,PublicKey publicKey){
+    FileOutputStream fos = null;
+    try {
+        // Store Public Key.
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+                        publicKey.getEncoded());
+        fos = new FileOutputStream(path );
+        fos.write(x509EncodedKeySpec.getEncoded());
+        fos.close();
+    } catch (IOException ex) {
+        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+    }   finally {
+        try {
+            fos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+	 
+ }
+
+/***********************************  loadPublicKey *****************************************/
+
+public static PublicKey loadPublicKey(String path, String algorithm){
+	
+     FileInputStream fis = null;
+     PublicKey publicKey=null;
+    try {
+        // Read Public Key.
+        File filePublicKey = new File(path );
+        fis = new FileInputStream(path );
+        byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
+        fis.read(encodedPublicKey);
+        fis.close();
+        // Generate KeyPair.
+        KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+                        encodedPublicKey);
+        publicKey = keyFactory.generatePublic(publicKeySpec);
+        return  publicKey ;
+    } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException ex) {
+        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+        try {
+            fis.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    return  publicKey ;
+ }
+
+/***************************  storePrivateKeyEncoded ()  ***************************/
+
+  public static void storePrivateKeyEncoded( String path, PrivateKey privateKey){
+        FileOutputStream fos = null;
+        try {
+            // Store Private Key.
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+                            privateKey.getEncoded());
+            fos = new FileOutputStream(path );
+            fos.write(pkcs8EncodedKeySpec.getEncoded());
+            fos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }   finally {
+            try {
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+	}
+  
+  
+  /************************  loadPrivateKey()   ************************/ 
+ 
+  
+  public static   PrivateKey loadPrivateKey(String path,String algorithm){
+        FileInputStream fis = null;
+        PrivateKey privateKey=null;
+        try {
+            // Read Private Key.
+            File filePrivateKey = new File(path);
+            fis = new FileInputStream(path);
+            byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
+            fis.read(encodedPrivateKey);
+            fis.close();
+            // Generate KeyPair.
+            KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
+                            encodedPrivateKey);
+             privateKey = keyFactory.generatePrivate(privateKeySpec);
+            return   privateKey;
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+      return privateKey;
+     }
+   
+
+/*****************************  keyStore ************************/
+  
+  /***  il y a un problème avac cette méthode 
+ * @throws IOException 
+ * @throws FileNotFoundException 
+ * @throws CertificateException 
+ * @throws NoSuchAlgorithmException 
+ * @throws KeyStoreException ***/
+public void storePrivKeyKeyStore(PrivateKey privKey) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {	
+	
+  
+  KeyStore ks = KeyStore.getInstance("JKS");
+  ks.load(null,null);  
+  
+  X509Certificate [] certChain = new X509Certificate[1];
+  
+  ks.setKeyEntry("privKeyBanque", privKey, "password".toCharArray(), certChain);
+   
+  ks.store(new FileOutputStream("keyStore.ks") ,"password".toCharArray());
+  System.out.println("Creation de KeyStore");
+
+  
+  
+}  
+  
+
+  
+  /**********************************************************/
+  
+  
 
 
 public static void main (String [] args ) {
 	
 	CryptoUtils util = new CryptoUtils() ;
-	util.initRSAKeys();   
+	util.initRSAKeys(); 
+	pubKey = (RSAPublicKey) util.loadPublicKey("pubKeyBanque.key", "RSA");
+	privKey = (RSAPrivateKey) util.loadPrivateKey("privKeyBanque.key", "RSA");
+	secretKey = util.initAES128() ;
 	
 
 	String message = "ceci est un test" ;
@@ -444,7 +710,10 @@ public static void main (String [] args ) {
 		byte [] [] tab5 = deconcat(new String(tab4)) ;
 		
 		
+		//chiffrement AES128
 		
+		byte tab6 [] = util.encAES128("message pour test AES128".getBytes(), secretKey);
+		util.decAES128(tab6, secretKey);
 		 
 		
 		
