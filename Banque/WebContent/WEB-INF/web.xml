@@ -5,19 +5,31 @@ xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/
 
   
 
+ 
+ 
   <servlet>
-  
-    <servlet-name>Jersey REST web service Service</servlet-name>
+  	
+    <servlet-name>Jersey REST cryptoService</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-  
+    
+     
+    <load-on-startup>1</load-on-startup>
+    
   </servlet>
   
+ 
+ 
+ 
   
   
   
+ 
   <servlet-mapping>
-    <servlet-name>Jersey REST web service Service</servlet-name>
+    <servlet-name>Jersey REST crypto Service</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
+ 
+  
+   
   
 </web-app>
