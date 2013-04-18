@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -733,7 +734,214 @@ public void storePrivKeyKeyStore(PrivateKey privKey) throws KeyStoreException, N
   
 
   
-  /**********************************************************/
+  /*************************    Ali *********************************/
+
+
+
+public String sendChallenge (String name_s,int id_i,RSAPublicKey pubKey){
+	
+	long time_l =  System.currentTimeMillis();
+	byte [] time = ByteBuffer.allocate(8).putLong(time_l).array();
+	
+	byte [] name = name_s.getBytes();
+	
+	RSAPrivateKey privKey = (RSAPrivateKey) CryptoUtils.loadPrivateKey("privKeyBanque.key", "RSA");
+	byte [] id = sign2(""+id_i,privKey);
+	
+	
+	byte [][] tab = new byte [3][];
+	tab [0] = time;
+	tab [1] = name;
+	tab [2] = id;
+	
+	
+	String chaine_concat = concat(tab);
+	
+	try {
+		byte[] enc = CryptoUtils.aencRSA(chaine_concat.getBytes(), pubKey);
+		return new String(Base64.encode(enc));
+	} catch (NoSuchProviderException e) {
+		e.printStackTrace();
+	}
+	
+
+	return null;
+	
+}
+
+public byte[][] receiveChallenge (String chaine_recu){
+	
+	byte []  chaine = Base64.decode(chaine_recu);
+	
+	RSAPrivateKey privKey = (RSAPrivateKey) CryptoUtils.loadPrivateKey("privKeyBDD.key", "RSA");
+	byte[] dec = CryptoUtils.adecRSA(chaine, privKey);
+	
+	byte deconc [][] = CryptoUtils.deconcat(new String(dec));
+	
+	
+	return deconc;
+}
+
+
+
+
+
+
+public static String sendSessionKey (byte[] Ksession,RSAPublicKey pubKey){
+	
+	long time_l =  System.currentTimeMillis();
+	byte [] time = ByteBuffer.allocate(8).putLong(time_l).array();
+	
+	
+	byte [][] tab = new byte [2][];
+	tab [0] = time;
+	tab [1] = Ksession;
+	
+	String chaine_concat = concat(tab);
+	
+	try {
+		byte[] enc = CryptoUtils.aencRSA(chaine_concat.getBytes(), pubKey);
+		
+		 System.out.println("sendSessionKey : --> "+new String(enc));
+		 System.out.println("sendSessionKey (time) : --> "+new String(time));
+		return new String(Base64.encode(enc));
+	} catch (NoSuchProviderException e) {
+		e.printStackTrace();
+	}
+
+	return null;
+	
+}
+
+public static byte[][] receiveSessionKey(String chaine_recu){
+	
+	byte [] chaine =Base64.decode(chaine_recu);
+	
+	RSAPrivateKey privKey = (RSAPrivateKey) CryptoUtils.loadPrivateKey("privKeyBanque.key", "RSA");
+	byte[] dec = CryptoUtils.adecRSA(chaine, privKey);
+	
+	byte deconc [][] = CryptoUtils.deconcat(new String(dec));
+	 System.out.println("timeStamp: -->"+deconc[0]);
+	 System.out.println("cession cle : --> "+deconc[1]);
+	return deconc;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public static String sendLoginPassword (String login_s,byte[]password,SecretKey Ksession){
+	
+	byte [] login = login_s.getBytes();
+	
+	byte [][] tab = new byte [2][];
+	tab [0] = login;
+	tab [1] = password;
+	
+	String chaine_concat = concat(tab);
+	
+	try {
+		byte[] enc = CryptoUtils.encAES128(chaine_concat.getBytes(), Ksession);
+		 System.out.println("sendLoginPassword: --> "+new String(enc));
+		return new String(Base64.encode(enc));
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+	return null;
+		
+}
+
+public static byte[][] receiveLoginPassword (String chaine_recu,SecretKey Ksession){
+
+	
+	byte [] chaine = Base64.decode(chaine_recu);
+	
+	byte[] dec = CryptoUtils.decAES128(chaine, Ksession);
+	byte deconc [][] = CryptoUtils.deconcat(new String(dec));
+	 System.out.println("receiveLogin: -->"+new String(deconc[0]));
+	 System.out.println("receivePassword: --> "+deconc[1]);
+	return deconc;
+}
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+public String sendOK (SecretKey Ksession){
+	
+	String accept = new String("ACCEPT");
+	byte [] reponse = accept.getBytes();
+	
+	
+	try {
+		byte[] enc = CryptoUtils.encAES128(reponse, Ksession);
+		return new String(Base64.encode(enc));
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+	return null;
+	
+	
+	
+}
+
+
+public String sendFalse (SecretKey Ksession){
+	
+	String accept = new String("REFUSE");
+	byte [] reponse = accept.getBytes();
+	
+	try {
+		byte[] enc = CryptoUtils.encAES128(reponse, Ksession);
+		return new String(Base64.encode(enc));
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+	return null;
+	
+}
+
+public boolean receiveReponse (String chaine_recu,SecretKey Ksession){
+	
+	String chaine = new String (Base64.decode(chaine_recu));
+	byte[] dec = CryptoUtils.decAES128(chaine.getBytes(), Ksession);
+	
+	String reponse = dec.toString();
+	if(reponse.equals("ACCEPT")) return true;
+		else return false;
+
+}
+
   
   
 
@@ -746,61 +954,73 @@ public static void main (String [] args ) {
 	privKey = (RSAPrivateKey) util.loadPrivateKey("privKeyBanque.key", "RSA");
 	secretKey = util.initAES128() ;
 	
+	
+	 receiveSessionKey(sendSessionKey (secretKey.getEncoded(),pubKey));	
+	
+	
+	 receiveLoginPassword(sendLoginPassword("login","password".getBytes(),secretKey),secretKey);
+	
+	
+	
+	
+	
+	
+	
+	
 
-	String message = "ceci est un test" ;
-	util.digest(message);
-	byte []  signature = util.sign2(message, util.privKey);
-	util.verify(message, signature, util.pubKey);
-	
-	
-	
-	
-	byte[] cipherText1 ,cipherText2,cipherText3;
-	try {
-		
-		
-		
-		// chiffrement 
-		cipherText1 = "test".getBytes();
-		cipherText2 ="Ali".getBytes();
-		cipherText3 = "Abdelleh".getBytes() ;
-		
-		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
-		
-		
-		String messg = concat(tab) ;
-		
-		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
-		
-		// déchiffrement
-		
-		byte [] tab4 = util.adecRSA(tab3, privKey);
-		byte [] [] tab5 = deconcat(new String(tab4)) ;
-		
-		
-		//chiffrement AES128
-		
-		byte tab6 [] = util.encAES128("message pour test AES128".getBytes(), secretKey);
-		util.decAES128(tab6, secretKey);
-		 
-		
-		
-		
-		
-		
-		
-	} catch (NoSuchProviderException e) {
-		 
-		e.printStackTrace();
-	}
-	
-	
-	
-	
-	
-	
+//	String message = "ceci est un test" ;
+//	util.digest(message);
+//	byte []  signature = util.sign2(message, util.privKey);
+//	util.verify(message, signature, util.pubKey);
+//	
+//	
+//	
+//	
+//	byte[] cipherText1 ,cipherText2,cipherText3;
+//	try {
+//		
+//		
+//		
+//		// chiffrement 
+//		cipherText1 = "test".getBytes();
+//		cipherText2 ="Ali".getBytes();
+//		cipherText3 = "Abdelleh".getBytes() ;
+//		
+//		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
+//		
+//		
+//		String messg = concat(tab) ;
+//		
+//		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
+//		
+//		// déchiffrement
+//		
+//		byte [] tab4 = util.adecRSA(tab3, privKey);
+//		byte [] [] tab5 = deconcat(new String(tab4)) ;
+//		
+//		
+//		//chiffrement AES128
+//		
+//		byte tab6 [] = util.encAES128("message pour test AES128".getBytes(), secretKey);
+//		util.decAES128(tab6, secretKey);
+//		 
+//		
+//		
+//		
+//		
+//		
+//		
+//	} catch (NoSuchProviderException e) {
+//		 
+//		e.printStackTrace();
+//	}
+//	
+//	
+//	
+//	
+//	
+//	
 }
-
 
 
 
