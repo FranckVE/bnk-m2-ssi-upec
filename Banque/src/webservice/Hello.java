@@ -25,7 +25,7 @@ import com.sun.jersey.api.client.WebResource;
  */
 
 // Sets the path to base URL + /hello
-@Path("/login")
+@Path("/hello")
 public class Hello {
 
 //	@Context
