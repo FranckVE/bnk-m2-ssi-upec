@@ -1,4 +1,4 @@
-package cryptos;
+package cryptos ;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -26,6 +27,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +41,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 
-import com.sun.jersey.core.util.Base64;
+import org.bouncycastle.util.encoders.Base64;
  
 public class CryptoUtils {
 
@@ -103,6 +106,71 @@ public void generateKeyPairs(){
 		
 }
 
+ public static RSAPublicKey getRSAPubKey( byte [] publicExponent , byte [] modulus){
+     
+     RSAPublicKey pubKey=null;
+     try {
+        RSAPublicKeySpec pubKeySpec=null;
+        KeyFactory kf=KeyFactory.getInstance("RSA","BC");
+        
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+       
+           
+                            
+               BigInteger n = new BigInteger(modulus);                
+               BigInteger e = new BigInteger( publicExponent);
+                
+               pubKeySpec = new RSAPublicKeySpec(n,e);
+               pubKey= (RSAPublicKey) kf.generatePublic(pubKeySpec);
+        
+       
+    } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException ex) {
+        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+    }
+ return pubKey;	 
+}
+ 
+///////////////////////   getPrivateKey()  /////////////////:
+ public static RSAPrivateKey getRSAPrivateKey( byte [] privateExponent , byte [] modulus){
+     
+	 RSAPrivateKey privKey=null;
+     try {
+        RSAPrivateKeySpec privKeySpec=null;
+        KeyFactory kf=KeyFactory.getInstance("RSA","BC");
+        
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+       
+           
+                            
+               BigInteger n = new BigInteger(modulus);                
+               BigInteger d = new BigInteger( privateExponent);
+                
+               privKeySpec = new RSAPrivateKeySpec(n,d);
+               privKey=(RSAPrivateKey) kf.generatePrivate(privKeySpec);
+        
+       
+    } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException ex) {
+        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+    }
+ return privKey;	 
+}
+ 
+ 
+ 
+//################################################################# 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 //cette méthode permet de retourner le hash d'un message, ce hash sera comparé à celui dans la base de données	
 public static String digest( String message ){
 	
