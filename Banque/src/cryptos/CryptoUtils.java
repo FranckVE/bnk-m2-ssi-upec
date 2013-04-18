@@ -1018,54 +1018,7 @@ return pk;
 /////////////////////////////////////////////////   
 
 
-/**************************** storePublicKeyEncoded  ****************************/
 
-public static void storePublicKeyEncoded(String path,PublicKey publicKey){
-    FileOutputStream fos = null;
-    try {
-        // Store Public Key.
-        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
-                        publicKey.getEncoded());
-        fos = new FileOutputStream(path );
-        fos.write(x509EncodedKeySpec.getEncoded());
-        fos.close();
-    } catch (IOException ex) {
-        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
-    }   finally {
-        try {
-            fos.close();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-	 
- }
-
-
-
-
-/***************************  storePrivateKeyEncoded ()  ***************************/
-
-public static void storePrivateKeyEncoded( String path, PrivateKey privateKey){
-    FileOutputStream fos = null;
-    try {
-        // Store Private Key.
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
-                        privateKey.getEncoded());
-        fos = new FileOutputStream(path );
-        fos.write(pkcs8EncodedKeySpec.getEncoded());
-        fos.close();
-    } catch (IOException ex) {
-        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
-    }   finally {
-        try {
-            fos.close();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-}
 
 
 
