@@ -1,3 +1,4 @@
+@CHARSET "ISO-8859-1";
 
 /*
 Design by Free CSS Templates
@@ -341,4 +342,14 @@ img {
 /* Footer > Links */
 
 #links {
+}
+
+.textcolorre {
+	color: #B9121B;
+}
+.textcolorwhite {
+	color : #FCFAE1;
+	text-align: center;
+	
+	
 }
