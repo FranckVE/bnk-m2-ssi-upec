@@ -942,7 +942,165 @@ public boolean receiveReponse (String chaine_recu,SecretKey Ksession){
 
 }
 
-  
+public static String loadPublicKey(String path ){
+    FileInputStream fis = null;
+    
+   
+        // Read Public Key.
+        File filePublicKey = new File(path );
+        try {
+			fis = new FileInputStream(path );
+			
+			 byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
+			
+			 
+			 
+			 
+			 
+             fis.read(encodedPublicKey);
+             fis.close();
+             System.out.println("loadPublikey : PubKey Origini (Encoded) : ---->"+new String(encodedPublicKey));
+             String key = new String(Base64.encode(encodedPublicKey));
+             System.out.println("loadPublikey : PubKey (Base 64) : ---->"+key);
+            return key  ;	
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       return null ; 
+ } 
+
+public static PublicKey getPublicKeyBase64(String keyBase64 ) {
+	 
+	 
+	   byte [] keyEncoded = Base64.decode(keyBase64.getBytes());
+	 
+	 return getPublicKey1(keyEncoded) ;
+	 
+	 
+}         
+    
+/*************************** getPublicKey ******************/
+public static PublicKey getPublicKey1( byte [] key) {
+    //return getRSAPubKeyEncoded(key);
+    return  getPublicKeyEncoded(key);
+}
+
+
+public static PublicKey getPublicKeyEncoded(byte[] publicKeyData)  {
+    
+    PublicKey pk=null;
+   try {
+       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());   
+       X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyData);
+       KeyFactory keyFactory = KeyFactory.getInstance("RSA","BC");
+       pk= (RSAPublicKey)keyFactory.generatePublic(publicKeySpec);
+       
+       
+       
+       
+       
+       
+       return pk;
+   } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException ex) {
+       Logger.getLogger(API.class.getName()).log(Level.SEVERE, null, ex);
+   }
+return pk;
+}
+
+   
+
+
+/////////////////////////////////////////////////   
+
+
+/**************************** storePublicKeyEncoded  ****************************/
+
+public static void storePublicKeyEncoded(String path,PublicKey publicKey){
+    FileOutputStream fos = null;
+    try {
+        // Store Public Key.
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+                        publicKey.getEncoded());
+        fos = new FileOutputStream(path );
+        fos.write(x509EncodedKeySpec.getEncoded());
+        fos.close();
+    } catch (IOException ex) {
+        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+    }   finally {
+        try {
+            fos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+	 
+ }
+
+
+
+
+/***************************  storePrivateKeyEncoded ()  ***************************/
+
+public static void storePrivateKeyEncoded( String path, PrivateKey privateKey){
+    FileOutputStream fos = null;
+    try {
+        // Store Private Key.
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+                        privateKey.getEncoded());
+        fos = new FileOutputStream(path );
+        fos.write(pkcs8EncodedKeySpec.getEncoded());
+        fos.close();
+    } catch (IOException ex) {
+        Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+    }   finally {
+        try {
+            fos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}
+
+
+
+
+//génération de paire de clés RSA
+
+public static void generateKeyPairs(String pubKeyPath , String privKeyPath){
+	
+		KeyPairGenerator keyGen;
+			try {
+				
+				keyGen = KeyPairGenerator.getInstance("RSA");
+				keyGen.initialize(1024);
+				KeyPair keyPair = keyGen.genKeyPair() ;
+				
+				//pubKey generation and storing 
+				   RSAPublicKey pubKey = (RSAPublicKey) keyPair.getPublic();		    
+				     storePublicKeyEncoded(pubKeyPath, pubKey);
+				    
+				  //privKey generation and storing 
+				    
+				    RSAPrivateKey privKey = (RSAPrivateKey) keyPair.getPrivate() ;
+				 storePrivateKeyEncoded(privKeyPath, privKey);
+				   // storePrivKeyKeyStore(privKey);
+				    
+		System.out.println("pubKey (pubKeyBanque.key): -> "+new String(pubKey.getEncoded()));	
+		System.out.println("privKey (privKeyBanque.key): -> "+new String(privKey.getEncoded()));	
+				    
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}  
+
+//Cette méthode permet d'initialiser nos deux clés de type RSA
   
 
 
