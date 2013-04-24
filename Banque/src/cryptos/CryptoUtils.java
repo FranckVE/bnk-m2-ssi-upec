@@ -1051,7 +1051,7 @@ public static PublicKey getPublicKeyEncoded(byte[] publicKeyData)  {
        
        return pk;
    } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException ex) {
-       Logger.getLogger(API.class.getName()).log(Level.SEVERE, null, ex);
+       Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, ex);
    }
 return pk;
 }
