@@ -31,6 +31,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,10 +67,39 @@ public boolean fileExists ( String path){
 	else return false;
 }
 
+public static String bytesToHexString(byte[] bytes) {  
+    StringBuilder sb = new StringBuilder(bytes.length * 2);  
+  
+    Formatter formatter = new Formatter(sb);  
+    for (byte b : bytes) {  
+        formatter.format("%02x", b);  
+    }  
+  
+    return sb.toString();  
+}  
 
+
+
+public static String HexPresentation(String in){
+	
+	char [] tab = in.toCharArray();
+	String out="{";
+	
+	for(int i = 0 ; i <tab.length ; i++){
+		out+= "(byte)0x"+tab[i]+tab[i+1]+", ";
+		
+		 
+		i++;
+	}
+		
+		return out+"}" ;
+	
+	
+	
+}
 //génération de paire de clés RSA
 
-public void generateKeyPairs(){
+public static void generateKeyPairs(){
 	
 		KeyPairGenerator keyGen;
 			try {
@@ -79,17 +109,29 @@ public void generateKeyPairs(){
 				KeyPair keyPair = keyGen.genKeyPair() ;
 				
 				//pubKey generation and storing 
-				    pubKey = (RSAPublicKey) keyPair.getPublic();		    
-				    this.storePublicKeyEncoded("pubKeyBanque.key", pubKey);
+				    pubKey = (RSAPublicKey) keyPair.getPublic();	
+				    byte [] n = pubKey.getModulus().toByteArray();
+				    byte [] e = pubKey.getPublicExponent().toByteArray();
+				    
+				    storePublicKeyEncoded("pubKeyBanque.key", pubKey);
 				    
 				  //privKey generation and storing 
 				    
 				    privKey = (RSAPrivateKey) keyPair.getPrivate() ;
-				    this.storePrivateKeyEncoded("privKeyBanque.key", privKey);
+				    byte [] d = privKey.getPrivateExponent().toByteArray();
+				    
+				    storePrivateKeyEncoded("privKeyBanque.key", privKey);
 				   // storePrivKeyKeyStore(privKey);
 				    
-		System.out.println("pubKey (pubKeyBanque.key): -> "+new String(pubKey.getEncoded()));	
-		System.out.println("privKey (privKeyBanque.key): -> "+new String(privKey.getEncoded()));	
+//		System.out.println("pubKey (pubKeyBanque.key): -> "+new String(pubKey.getEncoded()));	
+//		System.out.println("privKey (privKeyBanque.key): -> "+new String(privKey.getEncoded()));	
+//			
+				    
+					System.out.println("n: -> "+HexPresentation(bytesToHexString(n)));	
+					System.out.println("e: -> "+HexPresentation(bytesToHexString(e)));	
+					System.out.println("d: -> "+HexPresentation(bytesToHexString(d)));	
+							    			    
+				    
 				    
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
@@ -112,9 +154,10 @@ public void generateKeyPairs(){
      RSAPublicKey pubKey=null;
      try {
         RSAPublicKeySpec pubKeySpec=null;
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyFactory kf=KeyFactory.getInstance("RSA","BC");
         
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        
        
            
                             
@@ -137,9 +180,10 @@ public void generateKeyPairs(){
 	 RSAPrivateKey privKey=null;
      try {
         RSAPrivateKeySpec privKeySpec=null;
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyFactory kf=KeyFactory.getInstance("RSA","BC");
         
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+      
        
            
                             
@@ -1058,18 +1102,77 @@ public static void generateKeyPairs(String pubKeyPath , String privKeyPath){
 
 
 public static void main (String [] args ) {
-	
+	// n = modulus
+	final byte[] publicModulus = new byte[]  {(byte)0x00, (byte)0xb3, (byte)0xe6, (byte)0xbf, (byte)0xc8, (byte)0x68, (byte)0x16, (byte)0x70,
+			 (byte)0x10, (byte)0xca, (byte)0xb5, (byte)0x35, (byte)0xbe, (byte)0x3c, (byte)0xda, (byte)0xa4,
+			 (byte)0x9f, (byte)0x24, (byte)0x9d, (byte)0x0f, (byte)0x06, (byte)0xd5, (byte)0x40, (byte)0x31,
+			 (byte)0x88, (byte)0x9a, (byte)0x65, (byte)0xa1, (byte)0x3c, (byte)0x12, (byte)0x5d, (byte)0xeb,
+			 (byte)0xdd, (byte)0x35, (byte)0x03, (byte)0xd4, (byte)0x9e, (byte)0xc4, (byte)0xf2, (byte)0x9d,
+			 (byte)0x44, (byte)0x9d, (byte)0xb7, (byte)0x35, (byte)0xbb, (byte)0x9c, (byte)0x7e, (byte)0xab,
+			 (byte)0x23, (byte)0xe7, (byte)0xa7, (byte)0xaa, (byte)0xa4, (byte)0xcc, (byte)0xcb, (byte)0xa8,
+			 (byte)0xb0, (byte)0x77, (byte)0xea, (byte)0xe4, (byte)0x5f, (byte)0xc8, (byte)0xa3, (byte)0x5b,
+			 (byte)0xd1, (byte)0x50, (byte)0x70, (byte)0x40, (byte)0x8f, (byte)0x43, (byte)0x9d, (byte)0xa9,
+			 (byte)0xb9, (byte)0xad, (byte)0xaf, (byte)0xf1, (byte)0x54, (byte)0x7d, (byte)0xa7, (byte)0xeb,
+			 (byte)0x6a, (byte)0xdc, (byte)0x6e, (byte)0xb6, (byte)0x3b, (byte)0x05, (byte)0x68, (byte)0xea, 
+			 (byte)0xc4, (byte)0x66, (byte)0xa9, (byte)0x87, (byte)0x0e, (byte)0x66, (byte)0x14, (byte)0x9c,
+			 (byte)0x65, (byte)0x5f, (byte)0x65, (byte)0xfc, (byte)0x5c, (byte)0x86, (byte)0xe6, (byte)0xd0,
+			 (byte)0xe1, (byte)0x63, (byte)0x85, (byte)0x0d, (byte)0xcc, (byte)0x16, (byte)0xd2, (byte)0xee, 
+			 (byte)0x01, (byte)0xfd, (byte)0x2e, (byte)0xa8, (byte)0xa9, (byte)0x62, (byte)0xfe, (byte)0x5e, 
+			 (byte)0xef, (byte)0x11, (byte)0x80, (byte)0x7b, (byte)0xfd, (byte)0x0e, (byte)0x5e, (byte)0x06, 
+			 (byte)0x2f};
+
+
+		// e = public exponent
+	final byte[] publicExponent = new byte[] {
+			(byte)0x01,(byte)0x00,(byte)0x01
+		};
+
+		// d = private exponent
+	final byte[] privateExponent = new byte[] {(byte)0x2a, (byte)0x6e, (byte)0x14, (byte)0xf3, (byte)0x8e, (byte)0x61, (byte)0x24, (byte)0x63,
+			 (byte)0x41, (byte)0x7c, (byte)0x05, (byte)0xc5, (byte)0xed, (byte)0x92, (byte)0x5f, (byte)0xdb, 
+			 (byte)0x4d, (byte)0x06, (byte)0x62, (byte)0x01, (byte)0xe9, (byte)0x8f, (byte)0xef, (byte)0x5e, 
+			 (byte)0xd9, (byte)0x93, (byte)0x78, (byte)0xb8, (byte)0xb3, (byte)0x58, (byte)0x45, (byte)0x85,
+			 (byte)0xf1, (byte)0xb8, (byte)0x0a, (byte)0x90, (byte)0xbb, (byte)0xc0, (byte)0xc1, (byte)0x08, 
+			 (byte)0xea, (byte)0xed, (byte)0xc8, (byte)0x15, (byte)0x8c, (byte)0xae, (byte)0x6f, (byte)0x6c, 
+			 (byte)0xd3, (byte)0x79, (byte)0x3f, (byte)0x0d, (byte)0x09, (byte)0x64, (byte)0x4b, (byte)0x4f,
+			 (byte)0xfb, (byte)0xa8, (byte)0x81, (byte)0xde, (byte)0x79, (byte)0x72, (byte)0xd5, (byte)0xf7,
+			 (byte)0x9c, (byte)0xf1, (byte)0x26, (byte)0x09, (byte)0x25, (byte)0xee, (byte)0x5e, (byte)0x68, 
+			 (byte)0xeb, (byte)0x5e, (byte)0x57, (byte)0xa1, (byte)0x03, (byte)0x7b, (byte)0x3d, (byte)0x8f, 
+			 (byte)0xca, (byte)0x72, (byte)0x47, (byte)0xd2, (byte)0xb3, (byte)0x9e, (byte)0x45, (byte)0x84, 
+			 (byte)0xf9, (byte)0x5d, (byte)0x1d, (byte)0x88, (byte)0xf6, (byte)0x06, (byte)0x0d, (byte)0x49, 
+			 (byte)0xc5, (byte)0xe5, (byte)0xe9, (byte)0x3c, (byte)0x87, (byte)0x1d, (byte)0xc5, (byte)0xea, 
+			 (byte)0xf5, (byte)0x6b, (byte)0x92, (byte)0x20, (byte)0x19, (byte)0x44, (byte)0xb0, (byte)0xef, 
+			 (byte)0xe3, (byte)0xdb, (byte)0x84, (byte)0xc4, (byte)0xbf, (byte)0xab, (byte)0x74, (byte)0xc9, 
+			 (byte)0xec, (byte)0xa7, (byte)0x86, (byte)0xad, (byte)0xef, (byte)0xd3, (byte)0xb1, (byte)0xf1
+			 }
+;  
+	   
+	   
+	   
+	   
 	CryptoUtils util = new CryptoUtils() ;
 	util.initRSAKeys(); 
+	boolean test = true;
+	// generateKeyPairs();
+	
+	if(test == true ){
+	
+	
+	pubKey = getRSAPubKey(publicExponent,publicModulus);
+	privKey = getRSAPrivateKey(privateExponent,publicModulus);
+	}
+	else {
+		
 	pubKey = (RSAPublicKey) util.loadPublicKey("pubKeyBanque.key", "RSA");
 	privKey = (RSAPrivateKey) util.loadPrivateKey("privKeyBanque.key", "RSA");
-	secretKey = util.initAES128() ;
+	}
+	//secretKey = util.initAES128() ;
 	
 	
-	 receiveSessionKey(sendSessionKey (secretKey.getEncoded(),pubKey));	
+	// receiveSessionKey(sendSessionKey (secretKey.getEncoded(),pubKey));	
 	
 	
-	 receiveLoginPassword(sendLoginPassword("login","password".getBytes(),secretKey),secretKey);
+//	 receiveLoginPassword(sendLoginPassword("login","password".getBytes(),secretKey),secretKey);
 	
 	
 	
@@ -1084,53 +1187,53 @@ public static void main (String [] args ) {
 //	byte []  signature = util.sign2(message, util.privKey);
 //	util.verify(message, signature, util.pubKey);
 //	
-//	
-//	
-//	
-//	byte[] cipherText1 ,cipherText2,cipherText3;
-//	try {
-//		
-//		
-//		
-//		// chiffrement 
-//		cipherText1 = "test".getBytes();
-//		cipherText2 ="Ali".getBytes();
-//		cipherText3 = "Abdelleh".getBytes() ;
-//		
-//		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
-//		
-//		
-//		String messg = concat(tab) ;
-//		
-//		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
-//		
-//		// déchiffrement
-//		
-//		byte [] tab4 = util.adecRSA(tab3, privKey);
-//		byte [] [] tab5 = deconcat(new String(tab4)) ;
-//		
-//		
-//		//chiffrement AES128
-//		
+	
+	
+	
+	byte[] cipherText1 ,cipherText2,cipherText3;
+	try {
+		
+		
+		
+		// chiffrement 
+		cipherText1 = "test".getBytes();
+		cipherText2 ="Ali".getBytes();
+		cipherText3 = "Abdelleh".getBytes() ;
+		
+		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
+		
+		
+		String messg = concat(tab) ;
+		
+		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
+		
+		// déchiffrement
+		
+		byte [] tab4 = util.adecRSA(tab3, privKey);
+		byte [] [] tab5 = deconcat(new String(tab4)) ;
+		
+		
+		//chiffrement AES128
+		
 //		byte tab6 [] = util.encAES128("message pour test AES128".getBytes(), secretKey);
 //		util.decAES128(tab6, secretKey);
-//		 
-//		
-//		
-//		
-//		
-//		
-//		
-//	} catch (NoSuchProviderException e) {
-//		 
-//		e.printStackTrace();
-//	}
-//	
-//	
-//	
-//	
-//	
-//	
+		 
+		
+		
+		
+		
+		
+		
+	} catch (NoSuchProviderException e) {
+		 
+		e.printStackTrace();
+	}
+	
+	
+	
+	
+	
+	
 }
 
 
