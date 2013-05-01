@@ -149,8 +149,8 @@ private void initNewCard(SmartCard card) {
 			System.out.println("Applet selecting...");
 			if (!this.selectApplet()) {
 				System.out.println("Wrong card, no applet to select!\n");
-				System.exit(1);
-				return;
+				//System.exit(1);
+				//return;
 			} else
 				System.out.println("Applet selected");}	
 	
@@ -464,7 +464,7 @@ private void enterPIN(String pinType,byte cmdType){
 	this.sendAPDU(cmd1, DISPLAY);	}
 
 //############################ enterPIN() ##########################
-private boolean enterPIN(byte [] pin,byte cmdType){	
+private int  enterPIN(byte [] pin,byte cmdType){	
 	 
 	byte[] header = { CLA, cmdType, P1, P2, (byte) pin.length };
 
@@ -475,10 +475,13 @@ private boolean enterPIN(byte [] pin,byte cmdType){
 	CommandAPDU cmd1 = new CommandAPDU(cmd);
 	ResponseAPDU resp = this.sendAPDU(cmd1, DISPLAY);
 	
-	if( this.apdu2string( resp ).equals( "90 00" ) )
-		return true;
+	if( this.apdu2string( resp ).equals( "69 99" ) ) //carte bloquée 
+		return 0;
 	else 
-		return false ;}
+	if( this.apdu2string( resp ).equals( "90 00" ) )  // succès 
+			return 1;	
+	else	
+		return 2 ;} //echec
 
                        //############################ cipherGeneric() ##########################
 private byte[] cipherGeneric(byte typeINS, byte[] challenge, byte P1) { // si P1 == 0x001 --> chiffrement si P1 == 0x00 --> déchiffrement
@@ -511,7 +514,7 @@ void updatePin(){ 	updatePIN("Cipher/Uncipher PIN",UPDATEPIN);   }
 void enterPin(int trie){  enterPIN("Cipher/Uncipher PIN (Encore "+trie+" essaies !!!)",ENTERPIN);	}	
 
 //############################ enterPIN() ##########################
-public boolean enterPin(char [] password){  return enterPIN(new String(password).getBytes(),ENTERPIN);	}
+public int  enterPin(char [] password){  return enterPIN(new String(password).getBytes(),ENTERPIN);	}
 
 //############################ cipher() ##########################
 public byte []  cipher(byte [] challenge){  // la taille du challenge doit être un multiple de 8
