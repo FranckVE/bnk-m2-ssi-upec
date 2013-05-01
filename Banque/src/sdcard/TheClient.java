@@ -1,5 +1,6 @@
 package sdcard;
 
+import java.applet.Applet;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import javax.crypto.ShortBufferException;
  
 
 
-public class TheClient {
+public class TheClient extends Applet {
 	
 	
 	
@@ -110,7 +111,10 @@ public class TheClient {
     
     
 	//init	
-	static SCard smartCard = new SCard();	
+		
+
+    
+   static SCard smartCard = new SCard();	
 	static Utils util = new Utils() ;
 	
 	

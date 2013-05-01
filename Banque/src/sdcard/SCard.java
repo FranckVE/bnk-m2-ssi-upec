@@ -463,6 +463,23 @@ private void enterPIN(String pinType,byte cmdType){
 	CommandAPDU cmd1 = new CommandAPDU(cmd);
 	this.sendAPDU(cmd1, DISPLAY);	}
 
+//############################ enterPIN() ##########################
+private boolean enterPIN(byte [] pin,byte cmdType){	
+	 
+	byte[] header = { CLA, cmdType, P1, P2, (byte) pin.length };
+
+	byte[] cmd = new byte[header.length + pin.length];
+	System.arraycopy(header, 0, cmd, 0, header.length);
+	System.arraycopy(pin, 0, cmd, header.length, pin.length);
+
+	CommandAPDU cmd1 = new CommandAPDU(cmd);
+	ResponseAPDU resp = this.sendAPDU(cmd1, DISPLAY);
+	
+	if( this.apdu2string( resp ).equals( "90 00" ) )
+		return true;
+	else 
+		return false ;}
+
                        //############################ cipherGeneric() ##########################
 private byte[] cipherGeneric(byte typeINS, byte[] challenge, byte P1) { // si P1 == 0x001 --> chiffrement si P1 == 0x00 --> déchiffrement
 		
@@ -492,6 +509,9 @@ void updatePin(){ 	updatePIN("Cipher/Uncipher PIN",UPDATEPIN);   }
 
 //############################ enterPIN() ##########################
 void enterPin(int trie){  enterPIN("Cipher/Uncipher PIN (Encore "+trie+" essaies !!!)",ENTERPIN);	}	
+
+//############################ enterPIN() ##########################
+public boolean enterPin(char [] password){  return enterPIN(new String(password).getBytes(),ENTERPIN);	}
 
 //############################ cipher() ##########################
 public byte []  cipher(byte [] challenge){  // la taille du challenge doit être un multiple de 8
