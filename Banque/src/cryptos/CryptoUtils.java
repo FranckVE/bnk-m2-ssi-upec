@@ -813,7 +813,7 @@ public String sendChallenge (String name_s,int id_i,RSAPublicKey pubKey){
 	
 }
 
-public byte[][] receiveChallenge (String chaine_recu){
+public static byte[][] receiveChallenge (String chaine_recu){
 	
 	byte []  chaine = Base64.decode(chaine_recu);
 	
@@ -1190,28 +1190,30 @@ public static void main (String [] args ) {
 	
 	
 	
-	byte[] cipherText1 ,cipherText2,cipherText3;
-	try {
+	//byte[] cipherText1 ,cipherText2,cipherText3;
+	//try {
 		
 		
 		
-		// chiffrement 
-		cipherText1 = "test".getBytes();
-		cipherText2 ="Ali".getBytes();
-		cipherText3 = "Abdelleh".getBytes() ;
-		
-		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
-		
-		
-		String messg = concat(tab) ;
-		
-		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
+//		// chiffrement 
+//		cipherText1 = "test".getBytes();
+//		cipherText2 ="Ali".getBytes();
+//		cipherText3 = "Abdelleh".getBytes() ;
+//		
+//		byte [] [] tab = {cipherText1, cipherText2, cipherText3} ;
+//		
+//		
+//		String messg = concat(tab) ;
+//		
+//		byte [] tab3 = util.aencRSA(messg.getBytes(), pubKey);
 		
 		// déchiffrement
+		String mess = "X21du8cTRUT2bkM6izy0u2SrbvigShkRR15G+ETDwq5OP48ayBGgsWxrdpVYZHXIAJMMD0tkCdlAcuX/SePWRK7f8MZkIsmV13CXguSJNK6BcKaO+eumlYFw8k4ro0XtgQr8r+cYQV2DAWQQnvgfjD23UCejOk7W0Xhh4Xl47BIsOJTez4MWGcb5583RWwwTyyuFNNnccyohwnSHycpRPcmtW08dczuDbd1nQ0yh7hxERNy7KZhh1PicN58h7rqm7SmY5pyVKyT2yT8nAUnVqRos170zszTZlH4FzwPvb8y6m7qGJsc6RDNgpwtQl+VjS7YLvndLAORdSFusE+UVNw==" ;
+		byte [][] test1 = CryptoUtils.receiveChallenge(mess);
 		
-		byte [] tab4 = util.adecRSA(tab3, privKey);
-		byte [] [] tab5 = deconcat(new String(tab4)) ;
-		
+//		byte [] tab4 = util.adecRSA(tab3, privKey);
+//		byte [] [] tab5 = deconcat(new String(tab4)) ;
+//		
 		
 		//chiffrement AES128
 		
@@ -1224,10 +1226,10 @@ public static void main (String [] args ) {
 		
 		
 		
-	} catch (NoSuchProviderException e) {
-		 
-		e.printStackTrace();
-	}
+//	} catch (NoSuchProviderException e) {
+//		 
+//		e.printStackTrace();
+//	}
 	
 	
 	

@@ -14,9 +14,8 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
-public class Login extends Applet {
-	public Login() {
-	}
+public class Login extends JApplet {
+	 
 	private JPasswordField passwordField;
 	private JLabel lblPleaseEnterYour;
 	private JButton btnNewButton ;
@@ -32,7 +31,7 @@ public class Login extends Applet {
 		
 		sdcard = new SCard();//initialisation carte à puce 
 		
-		lblPleaseEnterYour = new JLabel("Rentrer votre mot de passe: ("+tries+" essaie(s) restant(s))");
+		lblPleaseEnterYour = new JLabel("Rentrer votre mot de passe: (3 essai(s) restant)");
 		lblPleaseEnterYour.setForeground(Color.RED);
 		lblPleaseEnterYour.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		lblPleaseEnterYour.setBounds(24, 11, 472, 27);
@@ -89,8 +88,8 @@ public class Login extends Applet {
 					textField.setVisible(true);
 					
 					tries -- ;
-					lblPleaseEnterYour.setText("Rentrer votre mot de passe: ("+tries+" essaie(s) restant(s))");
-					textField.setText("Echec d'authentification: "+tries+ " essaie(s) restant(s)!");
+					lblPleaseEnterYour.setText("Rentrer votre mot de passe: ("+tries+" essai(s) restant)");
+					textField.setText("Echec d'authentification: "+tries+ " essai(s) restant!");
 					
 					if ( tries == 0 ) //on désactive tout, on affiche carte bloquée
 					{
@@ -98,7 +97,7 @@ public class Login extends Applet {
 					btnCancell.setVisible(false);
 					btnNewButton.setVisible(false);
 					textField.setVisible(false);
-					lblPleaseEnterYour.setText("Carte bloquée: Veuillez contacter votre banque");
+					lblPleaseEnterYour.setText("Carte bloquée: merci de contacter votre conseiller !!!");
 					
 					}
 					
@@ -112,7 +111,7 @@ public class Login extends Applet {
                      System.out.println("Carte bloquée!!!");
 					
 					lblPleaseEnterYour.setForeground(Color.RED);
-					lblPleaseEnterYour.setText("Carte bloquée: merci de contacter votre conseiller");
+					lblPleaseEnterYour.setText("Carte bloquée: merci de contacter votre conseiller !!!");
 					
 					//textPane.setText("Authentication success");// on modifie le contenu du JLabel
 					passwordField.setVisible(false);
