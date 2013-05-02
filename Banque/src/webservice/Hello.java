@@ -43,16 +43,16 @@ public class Hello {
 
 		// -------------------------------------------------------------------------------------------
 
-		Client c = Client.create();
-		WebResource resource = c
-				.resource("http://wsbdd-projetcdai.rhcloud.com/WebService/rest/echotest?login="
-						+ log + "&password=" + pass);
-		String response = resource.get(String.class);
+//		Client c = Client.create();
+//		WebResource resource = c
+//				.resource("http://wsbdd-projetcdai.rhcloud.com/WebService/rest/echotest?login="
+//						+ log + "&password=" + pass);
+//		String response = resource.get(String.class);
+//
+//		// return "login =" +log +"   password = "+pass ;
+//		return response;
 
-		// return "login =" +log +"   password = "+pass ;
-		return response;
-
-		// return "Hello Jersey in plain text";
+	return "Hello Jersey in plain text";
 	}
 
 	// // This method is called if request is HTML

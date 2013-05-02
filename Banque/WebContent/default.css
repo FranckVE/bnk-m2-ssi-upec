@@ -67,7 +67,8 @@ ol li {
 
 a {
 	text-decoration: none;
-	color: #BB1C1C;
+	/*color: #BB1C1C;*/ /*red*/
+	  color: #2E8B57 ;  /*green*/
 }
 
 a:hover {
@@ -75,7 +76,7 @@ a:hover {
 }
 
 img {
-	border: 4px solid #C90404;
+	border: 4px solid #2E8B57 ; /* #C90404;  */
 }
 
 /* Boxed Style */
@@ -90,7 +91,7 @@ img {
 	padding: 4px 0 0 15px;
 	background: url(images/img05.gif) no-repeat;
 	font-size: 1.4em;
-	color: #BB1C1C;
+	color: #2E8B57 ;  /* #BB1C1C;  */
 }
 
 .boxed .content {
@@ -195,7 +196,8 @@ img {
 }
 
 #menu a:hover, #menu .active a {
-	color: #BF1616;
+	color: #2E8B57; /* #BF1616;  */
+	 
 }
 
 /* Content */
@@ -254,6 +256,7 @@ img {
 	margin-bottom: 5px;
 	padding: 2px 5px;
 	border: 1px solid #C90404;
+	
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
@@ -314,7 +317,10 @@ img {
 	clear: both;
 	padding: 20px 50px;
 	border-top: 4px solid #930000;
-	background: #C90404;
+/*	background: #C90404; */  
+	background: #2E8B57; 
+	/* green */
+	     
 }
 
 #footer p {
@@ -346,6 +352,7 @@ img {
 
 .textcolorre {
 	color: #B9121B;
+	
 }
 .textcolorwhite {
 	color : #FCFAE1;

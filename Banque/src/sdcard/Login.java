@@ -15,6 +15,9 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
 public class Login extends JApplet {
+	public Login() {
+		getContentPane().setBackground(new Color(46, 139, 87));
+	}
 	 
 	private JPasswordField passwordField;
 	private JLabel lblPleaseEnterYour;
@@ -27,34 +30,41 @@ public class Login extends JApplet {
 	 * Create the applet.
 	 */
 	public void init() {
-		setLayout(null);
+		getContentPane().setLayout(null);
 		
 		sdcard = new SCard();//initialisation carte à puce 
 		
 		lblPleaseEnterYour = new JLabel("Rentrer votre mot de passe: (3 essai(s) restant)");
-		lblPleaseEnterYour.setForeground(Color.RED);
+		lblPleaseEnterYour.setForeground(new Color(0, 0, 0));
 		lblPleaseEnterYour.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		lblPleaseEnterYour.setBounds(24, 11, 472, 27);
-		add(lblPleaseEnterYour);
+		getContentPane().add(lblPleaseEnterYour);
 		
 		passwordField = new JPasswordField();
+		passwordField.setBackground(new Color(204, 255, 204));
 		passwordField.setHorizontalAlignment(SwingConstants.LEFT);
 		passwordField.setBounds(24, 55, 189, 20);
-		add(passwordField);
+		getContentPane().add(passwordField);
 		
 		btnNewButton = new JButton("Ok");
+		btnNewButton.setBackground(Color.GRAY);
 		
 		btnNewButton.setBounds(24, 112, 69, 23);
-		add(btnNewButton);
+		getContentPane().add(btnNewButton);
 		
 		btnCancell = new JButton("Cancel");
+		btnCancell.setBackground(Color.GRAY);
 		btnCancell.setActionCommand("Cancel");
 		btnCancell.setBounds(255, 112, 91, 23);
-		add(btnCancell);
+		getContentPane().add(btnCancell);
 		
 		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.BOLD, 13));
+		textField.setForeground(Color.RED);
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBackground(new Color(153, 204, 153));
 		textField.setBounds(24, 161, 350, 77);
-		add(textField);
+		getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setVisible(false);// au lancement de l'applet on affiche pas le textFieled
 		
