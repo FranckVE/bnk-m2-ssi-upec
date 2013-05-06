@@ -1210,6 +1210,19 @@ public static void main (String [] args ) {
 		// déchiffrement
 		String mess = "X21du8cTRUT2bkM6izy0u2SrbvigShkRR15G+ETDwq5OP48ayBGgsWxrdpVYZHXIAJMMD0tkCdlAcuX/SePWRK7f8MZkIsmV13CXguSJNK6BcKaO+eumlYFw8k4ro0XtgQr8r+cYQV2DAWQQnvgfjD23UCejOk7W0Xhh4Xl47BIsOJTez4MWGcb5583RWwwTyyuFNNnccyohwnSHycpRPcmtW08dczuDbd1nQ0yh7hxERNy7KZhh1PicN58h7rqm7SmY5pyVKyT2yT8nAUnVqRos170zszTZlH4FzwPvb8y6m7qGJsc6RDNgpwtQl+VjS7YLvndLAORdSFusE+UVNw==" ;
 		byte [][] test1 = CryptoUtils.receiveChallenge(mess);
+		File file = new File("privKey.txt");
+		String key = util.loadPublicKey("privKeyBanque.key");
+	    try {
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(key.getBytes(), 0, key.getBytes().length);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 //		byte [] tab4 = util.adecRSA(tab3, privKey);
 //		byte [] [] tab5 = deconcat(new String(tab4)) ;

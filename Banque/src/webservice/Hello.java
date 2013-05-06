@@ -34,6 +34,35 @@ public class Hello {
 	// This method is called if request is TEXT_HTML
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	public String sayHTMLHello(
+			@DefaultValue("test") @QueryParam("login") String log,
+			@DefaultValue("test") @QueryParam("password") String pass) {
+		// (we don't really want to use ServletContext, just show that we
+		// could:)
+	//	ServletContext ctx = context;
+
+		// -------------------------------------------------------------------------------------------
+
+//		Client c = Client.create();
+//		WebResource resource = c
+//				.resource("http://wsbdd-projetcdai.rhcloud.com/WebService/rest/echotest?login="
+//						+ log + "&password=" + pass);
+//		String response = resource.get(String.class);
+//
+//		// return "login =" +log +"   password = "+pass ;
+//		return response;
+		//System.setSecurityManager(null);
+		return "<object type=\"application/x-java-applet\" id=\"SmartCardApplet\""
+		+	"code=\"sdcard.Login.class\" codebase=\"./\" archive=\"http://localhost:8080/Banque/sdcard2.jar\" height=\"387\""
+		+	"width=\"482\">"
+		+ "</applet>"
+       ;
+	//return "Hello Jersey in text HTML";
+	}
+	
+	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
 	public String sayPlainTextHello(
 			@DefaultValue("test") @QueryParam("login") String log,
 			@DefaultValue("test") @QueryParam("password") String pass) {
@@ -53,27 +82,24 @@ public class Hello {
 //		return response;
 
 	return "Hello Jersey in plain text";
+//	return "<object type=\"application/x-java-applet\" id=\"SmartCardApplet\""
+//			+	"code=\"sdcard.Login.class\" codebase=\"./\" archive=\"./sdcard2.jar\" height=\"387\""
+//			+	"width=\"482\">"
+//           ;
 	}
+	
+	
+	@GET
+	@Produces(MediaType.TEXT_XML)
+	public String sayXMLTextHello(
+			@DefaultValue("test") @QueryParam("login") String log,
+			@DefaultValue("test") @QueryParam("password") String pass) {
+		// (we don't really want to use ServletContext, just show that we
+		// could:)
+	//	ServletContext ctx = context;
 
-	// // This method is called if request is HTML
-	// @GET
-	// @Produces( MediaType.TEXT_HTML )
-	// public String sayHtmlHello()
-	// {
-	// return "<html> "
-	// + "<title>" + "Hello Jersey" + "</title>"
-	// + "<body><h1>"
-	// + "Hello Jersey in HTML"
-	// + "</body></h1>"
-	// + "</html> ";
-	// }
-
-	// This method is called if request is XML
-	// @GET
-	// @Produces( MediaType.TEXT_XML )
-	// public String sayXMLHello()
-	// {
-	// return "<?xml version=\"1.0\"?>" + "<hello> Hello Jersey in XML" +
-	// "</hello>";
-	// }
+  return "XML";
+	
+	}
+	
 }

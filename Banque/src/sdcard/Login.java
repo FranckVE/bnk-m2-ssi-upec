@@ -15,10 +15,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
 public class Login extends JApplet {
-	public Login() {
-		getContentPane().setBackground(new Color(46, 139, 87));
-	}
-	 
+	
 	private JPasswordField passwordField;
 	private JLabel lblPleaseEnterYour;
 	private JButton btnNewButton ;
@@ -26,38 +23,61 @@ public class Login extends JApplet {
 	private JTextField textField;
 	private int tries = 3 ;
 	private SCard sdcard;
+	
+	public Login() {
+		getContentPane().setBackground(new Color(46, 139, 87));
+		sdcard = new SCard();//initialisation carte à puce 
+		 
+	}
+	 
+	
 	/**
 	 * Create the applet.
 	 */
 	public void init() {
-		getContentPane().setLayout(null);
+		getContentPane().setLayout(null);	
 		
-		sdcard = new SCard();//initialisation carte à puce 
-		
+	//if(sdcard.isCardInserted()) {
+		//////////JLabel////////
 		lblPleaseEnterYour = new JLabel("Rentrer votre mot de passe: (3 essai(s) restant)");
 		lblPleaseEnterYour.setForeground(new Color(0, 0, 0));
 		lblPleaseEnterYour.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		lblPleaseEnterYour.setBounds(24, 11, 472, 27);
 		getContentPane().add(lblPleaseEnterYour);
+//	}
+//	else
+//	{
+//		//////////JLabel////////
+//		lblPleaseEnterYour = new JLabel("Merci d'insérer votre carte bancaire dans le lecteur de carte...");
+//		lblPleaseEnterYour.setForeground(new Color(0, 0, 0));
+//		lblPleaseEnterYour.setFont(new Font("Arial Black", Font.PLAIN, 14));
+//		lblPleaseEnterYour.setBounds(24, 11, 472, 27);
+//		getContentPane().add(lblPleaseEnterYour);
+//	}
 		
+		////////JPasswordFieled//////////
 		passwordField = new JPasswordField();
 		passwordField.setBackground(new Color(204, 255, 204));
 		passwordField.setHorizontalAlignment(SwingConstants.LEFT);
 		passwordField.setBounds(24, 55, 189, 20);
 		getContentPane().add(passwordField);
 		
-		btnNewButton = new JButton("Ok");
-		btnNewButton.setBackground(Color.GRAY);
 		
+		///////JButton/////////////
+		btnNewButton = new JButton("Ok");
+		btnNewButton.setBackground(Color.GRAY);		
 		btnNewButton.setBounds(24, 112, 69, 23);
 		getContentPane().add(btnNewButton);
 		
+		///////JButton////////////
 		btnCancell = new JButton("Cancel");
 		btnCancell.setBackground(Color.GRAY);
 		btnCancell.setActionCommand("Cancel");
 		btnCancell.setBounds(255, 112, 91, 23);
 		getContentPane().add(btnCancell);
 		
+		
+		////////JTextFieled////////////
 		textField = new JTextField();
 		textField.setFont(new Font("Tahoma", Font.BOLD, 13));
 		textField.setForeground(Color.RED);
@@ -69,11 +89,15 @@ public class Login extends JApplet {
 		textField.setVisible(false);// au lancement de l'applet on affiche pas le textFieled
 		
 		
+		
+		
+		
 		/////////////////////////////////////////
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {			
 				
 				char [] pwd = passwordField.getPassword();
+				sdcard.waittingForCard();
 				int resp = sdcard.enterPin(pwd);
 			
 				
@@ -137,4 +161,11 @@ public class Login extends JApplet {
 		
 
 	}
+
+
+
+
+  
+
+
 }

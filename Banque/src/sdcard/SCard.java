@@ -5,13 +5,15 @@ import java.util.Formatter;
  
 //import javacard.framework.Util;
 
+import opencard.core.event.CTListener;
+import opencard.core.event.CardTerminalEvent;
 import opencard.core.service.*;
 import opencard.core.terminal.*;
 import opencard.core.util.*;
 import opencard.opt.util.*;
  
 
-public class SCard {
+public class SCard {// implements CTListener {
 	
 	 
 	//########################### Constantes protocolaires ##############################################	
@@ -63,6 +65,8 @@ public class SCard {
 		static final boolean DISPLAY = true;
 
 	//########################### variables globales ##############################################	
+	    public CardRequest cr ;
+	    public SmartCard sm;
 	    
 		public static int maximumTries = 3 ;	
 	    private PassThruCardService servClient = null;
@@ -85,28 +89,65 @@ public class SCard {
 
 			SmartCard.start(); //début
          
-			System.out.print("Smartcard inserted?... ");
+			System.out.print("Waitting for SmartCard... ");
 
-			CardRequest cr = new CardRequest(CardRequest.ANYCARD, null, null);
-
-			SmartCard sm = SmartCard.waitForCard(cr);
-
-			if (sm != null) {
-				System.out.println("got a SmartCard object!\n");
-			} else
-				System.out.println("did not get a SmartCard object!\n");
-
-			this.initNewCard(sm);  // cette méthode fait appel, quand tout va bien, à la méthode mainLoop() qui propose à l'utilisateur un menu (boucle infinie)
+			cr = new CardRequest(CardRequest.ANYCARD, null, null);
+			//CardTerminalRegistry.getRegistry().addPollable(null);
 			
-		    // SmartCard.shutdown(); // fin du traitement de la carte à puce ( à ne surtout pas appeler, avant d'effectuer tous les traitements nécessaires
-
 		} catch (Exception e) {
 			System.out.println("TheClient error: " + e.getLocalizedMessage());
 		}
 		 
 	}
 
-	  //##############################  Fonctions de bases pour la bonne communication avec la carte à puce  ##############################	
+//////////////////cardInserted(CardTerminalEvent arg0)//////////////méthode de la classe CTListener
+//	    @Override
+//	    public void cardInserted(CardTerminalEvent arg0) throws CardTerminalException {
+//	    	// TODO Auto-generated method stub
+//	    	sm = SmartCard.getSmartCard(arg0, cr);
+//	    	System.out.println("carte insérée");
+//	    }
+//
+/////////////////cardRemoved(CardTerminalEvent arg0)//////////////méthode de la classe CTListener
+//	    @Override
+//	    public void cardRemoved(CardTerminalEvent ctEvent) throws CardTerminalException {
+//	    	// TODO Auto-generated method stub
+//	    	System.out.println("carte retirée");
+//	    	
+//	    } 
+///////////////// witingtForCard() //////////////
+public void waittingForCard(){ //cette méthode est bloquante, bloque jusqu'à l'insertion d'une carte !!!
+	
+	try {
+		sm = SmartCard.waitForCard(cr);//getSmartCard(null, cr);
+		
+		if (sm != null) {
+			System.out.println("got a SmartCard object!\n");
+			 
+		} else
+			System.out.println("did not get a SmartCard object!\n");
+
+		this.initNewCard(sm);  // cette méthode fait appel, quand tout va bien, à la méthode mainLoop() qui propose à l'utilisateur un menu (boucle infinie)
+		
+	    // SmartCard.shutdown(); // fin du traitement de la carte à puce ( à ne surtout pas appeler, avant d'effectuer tous les traitements nécessaires
+
+	} catch (CardTerminalException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}//waitForCard(cr);
+
+	
+}
+
+//############################## shutDown() ##############################		
+public void shutDown(){
+	try {
+		SmartCard.shutdown();
+	} catch (CardTerminalException e) {
+	 
+		e.printStackTrace();}  	}
+	
+//##############################  Fonctions de bases pour la bonne communication avec la carte à puce  ##############################	
 		
 //la méthode suivante est appelée dans la méthode "initNewCard"	
 //######################################## selectApplet() ###################################	    
@@ -154,14 +195,7 @@ private void initNewCard(SmartCard card) {
 			} else
 				System.out.println("Applet selected");}	
 	
-//############################## shutDown() ##############################		
-public void shutDown(){
-	try {
-		SmartCard.shutdown();
-	} catch (CardTerminalException e) {
-	 
-		e.printStackTrace();}  	}
-	
+
 //############################## sendAPDU() ##############################
 	private ResponseAPDU sendAPDU(CommandAPDU cmd) { return sendAPDU(cmd, true); }
 
@@ -947,6 +981,9 @@ private String readKeyboard() {
 
 	return result;
 }
+
+
+
 
                                          //############################ FIN ##########################
 	
