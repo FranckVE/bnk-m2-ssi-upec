@@ -94,8 +94,11 @@ public class Login extends JApplet {
 		
 		/////////////////////////////////////////
 		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {			
+			public void actionPerformed(ActionEvent e) {
 				
+				//récupération des paramètres transmis à la page html
+				String login = getParameter("login");
+				String passwd = getParameter("password");
 				char [] pwd = passwordField.getPassword();
 				sdcard.waittingForCard();
 				int resp = sdcard.enterPin(pwd);
@@ -105,6 +108,8 @@ public class Login extends JApplet {
 				if(resp == 1){ //authentification réussie
 					
 					System.out.println("Authentification de la carte réussie !!!");
+					System.out.println("login: --> "+login);
+					System.out.println("password: -->"+passwd);
 					
 					lblPleaseEnterYour.setForeground(Color.blue);
 					lblPleaseEnterYour.setText("Authentification de la carte réussie");
@@ -114,6 +119,27 @@ public class Login extends JApplet {
 					btnCancell.setVisible(false);
 					btnNewButton.setVisible(false);
 					textField.setVisible(false);
+					//ici on procède à notre traitement qui consiste à signer le hash du mot de passe du client
+					//générer une clé de session de 16 octets
+					//chiffrer : login+clé de session+SHA1(pwd)+SIG avec la clé publique de la banque
+					
+					//String tocken = getTocken();
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 				}
 				else 
 				if ( resp == 2 )

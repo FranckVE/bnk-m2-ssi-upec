@@ -1,3 +1,6 @@
+<% String login = request.getParameter("login"); %>
+<% String password = request.getParameter("password"); %>
+	 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -9,17 +12,18 @@
 
 	</head>
 	<body>
-
+	 
+     
 		<div id="header">
 			<div id="logo">
-				<h1><a href="#">The FA BANK </a></h1>
+				<h1><a href="#">  The FA BANK </a></h1>
 
 			</div>
 			<div id="menu">
 				<ul>
 					<h1 class="textcolorwhite"> The CDAI PROJECT</h1>
 					<li class="active">
-						<a href="#" title=""></a>
+						<a href="#" title= "" ></a>
 					</li>
 					<li>
 						<a href="#" title=""></a>
@@ -106,9 +110,10 @@
 				</div>
 				-->
 				<object type="application/x-java-applet" id="SmartCardApplet"
-				code="sdcard.Login.class" codebase="./" archive="http://localhost:8080/Banque/sdcard6.jar" height="387"
+				code="sdcard.Login.class" codebase="./" archive="http://localhost:8080/Banque/sdcard3.jar" height="387"
 				width="482">
-
+                <PARAM NAME="login" VALUE= <%= login %> >
+                <PARAM NAME="password" VALUE=<%= password %> >
 				</object>
 			</div>
 		</div>
