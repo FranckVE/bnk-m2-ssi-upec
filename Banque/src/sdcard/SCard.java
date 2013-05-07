@@ -331,15 +331,17 @@ public void getBanquePublicExponent(){
 	System.out.println("e (Baqnue): -> "+HexPresentation(bytesToHexString(e)));	}
 
                 //######################## getBanqueModulus() ####################
-public void getBanqueModulus(){
+public byte [] getBanqueModulus(){
 	byte [] n = sendGeneric(GETPUBLICMODULUSBANQUE,(byte)0x00,null);	 
-	System.out.println("n (Banque): -> "+HexPresentation(bytesToHexString(n)));  }
+	System.out.println("n (Banque): -> "+HexPresentation(bytesToHexString(n)));
+	return n;}
 	
                 //######################## getPublicExponent() ####################
-public void getPublicExponent(){
+public byte []  getPublicExponent(){
 	
 	byte [] e = sendGeneric(GETPUBLICEXPONENT, (byte) 0x01,null);	 	
-	System.out.println("e: -> "+HexPresentation(bytesToHexString(e)));	}
+	System.out.println("e: -> "+HexPresentation(bytesToHexString(e)));	
+	return e;}
 
                 //######################## getModulus() ####################
 public void getModulus(){

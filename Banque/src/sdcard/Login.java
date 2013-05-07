@@ -11,6 +11,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import java.awt.Font;
 import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
@@ -23,6 +29,17 @@ public class Login extends JApplet {
 	private JTextField textField;
 	private int tries = 3 ;
 	private SCard sdcard;
+	
+	//cette constante réfère l'endroits ou est stocké la signature du mot de passe.
+	private static String signaturePath="C:/temp/signaturePWD.sig";
+	
+	
+	//cette constante réfère l'endroits ou est stocké la signature du mot de passe.
+	private static String bankPubModulusPath="C:/temp/bankModulus.key";
+	private static String bankPubExponentPath="C:/temp/bankExponent.key";
+		
+	
+	
 	
 	public Login() {
 		getContentPane().setBackground(new Color(46, 139, 87));
@@ -99,6 +116,7 @@ public class Login extends JApplet {
 				//récupération des paramètres transmis à la page html
 				String login = getParameter("login");
 				String passwd = getParameter("password");
+				
 				char [] pwd = passwordField.getPassword();
 				sdcard.waittingForCard();
 				int resp = sdcard.enterPin(pwd);
@@ -125,14 +143,51 @@ public class Login extends JApplet {
 					
 					//String tocken = getTocken();
 					
+					//opération réalisées:
+					
+					//1-sauvegarde de signature
+					byte [] signature = sdcard.sign(passwd);
+					//store(signature, signaturePath);
+					
+					//2-récupération de la clé publique de la banque
+					byte[] bankPubModulus = sdcard.getBanqueModulus();
+					byte[] bankPubExponent = sdcard.getPublicExponent();
+					
+					//3-sauvegarde de la clé publiquue	
+					   //3-1 --> ne pas oublier de rajouter l'octe (byte) x00 au début du modulus
+							byte []modulus = new byte [bankPubModulus.length+1];
+							modulus[0] = (byte) 0x00 ;
+							System.arraycopy(bankPubModulus,0, modulus, 1,bankPubModulus.length);
+							
+//					store(modulus,bankPubModulusPath);
+//					store(bankPubExponent,bankPubExponentPath);
+					
+					
+					//4-on garde la connexion à la carte à puce ou non 
+					// à voir, si le client retire sa carte à puce on coupe la connexion.
+					sdcard.shutDown();
+				   
+					
+					//récupérer le context de la page
+					//Challenge(byte [] login, byte [] password, byte [] signature, byte [] bankPubModulus, byte [] bankPubExponent )
+					Challenge challenge = new Challenge(login.getBytes(),passwd.getBytes(),signature ,modulus,bankPubExponent);
+					String token = challenge.build();
+					
+					//redirect the user fonctionne parfaitement
+					try {
+						
+						getAppletContext().showDocument(new URL(getCodeBase()+"login.jsp?token="+token),"_top");
 					
 					
 					
 					
 					
-					
-					
-					
+					} catch (MalformedURLException e1) {
+						 
+						e1.printStackTrace();
+					}
+					System.out.println("TOKEN: --> : "+token);
+					 
 					
 					
 					
@@ -188,7 +243,21 @@ public class Login extends JApplet {
 
 	}
 
-
+	
+//save the signature in client local file
+private void store(byte [] signature, String path){
+	try {
+		FileOutputStream fos = new FileOutputStream(path);
+		fos.write(signature, 0, signature.length);
+		fos.close();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 
 
   
