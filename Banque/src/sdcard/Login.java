@@ -30,13 +30,13 @@ public class Login extends JApplet {
 	private int tries = 3 ;
 	private SCard sdcard;
 	
-	//cette constante réfère l'endroits ou est stocké la signature du mot de passe.
-	private static String signaturePath="C:/temp/signaturePWD.sig";
-	
-	
-	//cette constante réfère l'endroits ou est stocké la signature du mot de passe.
-	private static String bankPubModulusPath="C:/temp/bankModulus.key";
-	private static String bankPubExponentPath="C:/temp/bankExponent.key";
+//	//cette constante réfère l'endroits ou est stocké la signature du mot de passe.
+//	private static String signaturePath="C:/temp/signaturePWD.sig";
+//	
+//	
+//	//cette constante réfère l'endroits ou est stocké la signature du mot de passe.
+//	private static String bankPubModulusPath="C:/temp/bankModulus.key";
+//	private static String bankPubExponentPath="C:/temp/bankExponent.key";
 		
 	
 	
@@ -170,8 +170,19 @@ public class Login extends JApplet {
 					
 					//récupérer le context de la page
 					//Challenge(byte [] login, byte [] password, byte [] signature, byte [] bankPubModulus, byte [] bankPubExponent )
-					Challenge challenge = new Challenge(login.getBytes(),passwd.getBytes(),signature ,modulus,bankPubExponent);
+					Challenge challenge = new Challenge();
+					
+					challenge.setLogin(login.getBytes());
+					challenge.setPassword(passwd.getBytes());
+					
+					challenge.setSignature(signature);
+					 
+					challenge.setBankPubExponent(bankPubExponent);
+					challenge.setBankPubModulus(bankPubModulus);
+					
 					String token = challenge.build();
+					
+					store(token.getBytes(),"C:/temp/token.txt");
 					
 					//redirect the user fonctionne parfaitement
 					try {
@@ -186,7 +197,7 @@ public class Login extends JApplet {
 						 
 						e1.printStackTrace();
 					}
-					System.out.println("TOKEN: --> : "+token);
+					 
 					 
 					
 					
