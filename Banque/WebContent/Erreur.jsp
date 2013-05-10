@@ -30,7 +30,7 @@
 				<div id="login" class="boxed">
 					<h2 class="title">Client Account</h2>
 					<div class="content">
-						<form id="form1" method="get" action="Banque/rest/hello">
+						<form id="form1" method="post" action="smartCard.jsp">
 							<fieldset>
 								<legend>
 									Sign-In

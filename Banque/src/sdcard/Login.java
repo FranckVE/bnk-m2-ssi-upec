@@ -177,8 +177,8 @@ public class Login extends JApplet {
 					
 					challenge.setSignature(signature);
 					 
-					challenge.setBankPubExponent(bankPubExponent);
-					challenge.setBankPubModulus(bankPubModulus);
+					challenge.setBankPubExponent(bankPubExponent); // ces deux variables sont bel et bien utilisées
+					challenge.setBankPubModulus(modulus);
 					
 					String token = challenge.build();
 					

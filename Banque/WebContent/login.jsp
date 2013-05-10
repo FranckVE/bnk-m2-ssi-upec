@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="sdcard.Challenge" %> 
+<%@ page import="javax.servlet.RequestDispatcher" %>
 <% Challenge challenge = new Challenge() ;%>   
 <% String token = request.getParameter("token"); %>  
   
@@ -17,7 +18,16 @@
 <%  
 
 out.println(token);
-challenge.verify(token); %>
+if ( challenge.verify(token)){
+	RequestDispatcher rd = request.getRequestDispatcher("Accueil.jsp");
+		              rd.forward(request, response);
+}
+else {
+	RequestDispatcher rd = request.getRequestDispatcher("Erreur.jsp");
+    rd.forward(request, response);
+}
+	
+	%>
 
 </body>
 </html>

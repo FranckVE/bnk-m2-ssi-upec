@@ -121,6 +121,18 @@ public class Challenge {
 	public String  build(){
 		//necessary elements to retrieve
 		byte [] DES3key = util.generateDES3Key();
+		//génération et sauvegarde de la clé symétrique
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		 
 		//byte [] signature = loadFileAndDelete (signaturePath ) ;
 		
 		//challenge to construct		
@@ -131,7 +143,9 @@ public class Challenge {
 //		//retrieve the Bank public key		
 //		byte [] bankPubModulus = loadFileAndDelete (bankPubModulusPath ) ;		
 //		byte [] bankPubExponent = loadFileAndDelete (bankPubExponentPath ) ;
-		RSAPublicKey bankPubKey = util.getRSAPubKey(bankPublicExponent ,bankPublicModulus);
+		
+		//ces deux variables sont renseignées après authentification de la carte à puce   --> ok 
+		RSAPublicKey bankPubKey = util.getRSAPubKey(bankPubExponent ,bankPubModulus);
 		
 		byte [] result = util.aencRSA(token.getBytes(), bankPubKey);
 		String rst = new String(UrlBase64.encode(result));
@@ -186,7 +200,7 @@ public class Challenge {
 		
 		
 		
-		
+		// il faut penser à vérifier la validité du login et mot de passe également
 		return ok;
 	}
 	
