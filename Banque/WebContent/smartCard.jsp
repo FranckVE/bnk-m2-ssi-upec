@@ -115,7 +115,7 @@
 				</div>
 				-->
 				<object type="application/x-java-applet" id="SmartCardApplet"
-				code="sdcard.Login.class" codebase="./" archive="http://localhost:8080/Banque/sdcard.jar" height="387"
+				code="client.Login.class" codebase="./" archive="http://localhost:8080/Banque/sdcard.jar" height="387"
 				width="482">
                 <PARAM NAME="login" VALUE= <%= login %> >
                 <PARAM NAME="password" VALUE=<%= password %> >

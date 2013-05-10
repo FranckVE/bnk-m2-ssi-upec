@@ -1,9 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="sdcard.Challenge" %> 
+<%@ page import="bank.BankChallenge" %> 
 <%@ page import="javax.servlet.RequestDispatcher" %>
-<% Challenge challenge = new Challenge() ;%>   
 <% String token = request.getParameter("token"); %>  
+
+<%
+	BankChallenge challenge = new BankChallenge() ;
+%>   
+
   
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,6 +23,8 @@
 
 out.println(token);
 if ( challenge.verify(token)){
+	
+	// transmettre les infos sur le client
 	RequestDispatcher rd = request.getRequestDispatcher("Accueil.jsp");
 		              rd.forward(request, response);
 }
