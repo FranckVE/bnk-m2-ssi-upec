@@ -156,8 +156,10 @@ public class Pad extends JApplet{
 		btnNewButton_0 = new JButton("0");
 		btnNewButton_0.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_0.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_0.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_0, "6, 16");
@@ -166,8 +168,10 @@ public class Pad extends JApplet{
 		btnNewButton_1 = new JButton("1");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_1.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_1.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_1, "8, 16");
@@ -177,8 +181,10 @@ public class Pad extends JApplet{
 		btnNewButton_2 = new JButton("2");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_2.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_2.getText();
 				passwordField.setText(password);
+				}
 			}
 			
 		});
@@ -189,8 +195,10 @@ public class Pad extends JApplet{
 		btnNewButton_3 = new JButton("3");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_3.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_3.getText();
 				passwordField.setText(password);
+				}
 				
 			}
 		});
@@ -201,8 +209,10 @@ public class Pad extends JApplet{
 		btnNewButton_4 = new JButton("4");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_4.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_4.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_4, "8, 10");
@@ -212,8 +222,10 @@ public class Pad extends JApplet{
 		btnNewButton_5 = new JButton("5");
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_5.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_5.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_5, "10, 10");
@@ -223,8 +235,10 @@ public class Pad extends JApplet{
 		btnNewButton_6 = new JButton("6");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_6.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_6.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_6, "6, 12");
@@ -234,8 +248,10 @@ public class Pad extends JApplet{
 		btnNewButton_7 = new JButton("7");
 		btnNewButton_7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_7.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_7.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_7, "8, 12");
@@ -245,8 +261,10 @@ public class Pad extends JApplet{
 		btnNewButton_8 = new JButton("8");
 		btnNewButton_8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_8.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_8.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_8, "10, 12");
@@ -256,30 +274,36 @@ public class Pad extends JApplet{
 		btnNewButton_9 = new JButton("9");
 		btnNewButton_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_9.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_9.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 	    getContentPane().add(btnNewButton_9, "6, 14");
 		
 	    
 	  //-----------------------------------------------
-		btnNewButton_10 = new JButton("#");
+		btnNewButton_10 = new JButton(" ");
 		btnNewButton_10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_10.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_10.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_10, "8, 14, center, default");
 		
 		
 		//-----------------------------------------------
-		btnNewButton_11 = new JButton("#");
+		btnNewButton_11 = new JButton(" ");
 		btnNewButton_11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_11.getText().equals(" ")){ // si différent de espace
 				password= password+btnNewButton_11.getText();
 				passwordField.setText(password);
+				}
 			}
 		});
 		getContentPane().add(btnNewButton_11, "10, 14");
@@ -451,7 +475,7 @@ public class Pad extends JApplet{
 	/////////////////////////////////////////////////////////////
 		
 		
-	//randVirtualPad();	//sujet à erreur
+	randVirtualPad();	//sujet à erreur
 		
 	//getContentPane().repaint();	
 		
@@ -492,32 +516,38 @@ public class Pad extends JApplet{
 		{
 			
 		   //System.out.println("main --> j : "+ j);
-		    val = (int)(Math.random()*10);
+		    val = (int)(Math.random()*12);
 			 
 			//if the value is not already given
 			if (!tab.contains(""+val))
 			{
 				System.out.println("yes --> j : "+ j);
-				
+				if (val == 10 || val == 11 )
+					{
+					tab.add(""+val);
+					pav[j].setText(" ");	
+					}
+				else {
 				tab.add(""+val);
 				pav[j].setText(""+val);	
+				}
 				//pav[j].repaint();
 				j++;
 			}
 			
-			else 
-			{
-				//if the meaninig values are given
-				if ( j > 9)
-				{
-					//System.out.println("else yes --> j : "+ j);
-					pav[j].setText("#");
-					//pav[j].repaint();
-					j++;
-				}
-					
-				
-			}
+//			else 
+//			{
+//				//if the meaninig values are given
+//				if ( j > 9)
+//				{
+//					//System.out.println("else yes --> j : "+ j);
+//					pav[j].setText("#");
+//					//pav[j].repaint();
+//					j++;
+//				}
+//					
+//				
+//			}
 			
 		}
 	 tab.clear();
