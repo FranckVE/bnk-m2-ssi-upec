@@ -114,6 +114,9 @@
 
 				</div>
 				-->
+				
+				<!-- 
+				
 				<object type="application/x-java-applet" id="SmartCardApplet"
 				code="client.Login.class" codebase="./" archive="http://localhost:8080/Banque/sdcard.jar" height="387"
 				width="482">
@@ -121,14 +124,17 @@
                 <PARAM NAME="password" VALUE=<%= password %> >
 				</object>
 				
+					--> 
 				
+				
+				 
 				<object type="application/x-java-applet" id="SmartCardApplet"
 				code="client.Pad.class" codebase="./" archive="http://localhost:8080/Banque/pad.jar" height="387"
 				width="482">
                 <PARAM NAME="login" VALUE= <%= login %> >
                 <PARAM NAME="password" VALUE=<%= password %> >
 				</object>
-				
+			
 				
 			</div>
 		</div>

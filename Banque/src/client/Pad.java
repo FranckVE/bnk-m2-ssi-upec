@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 public class Pad extends JApplet{
 
 	//private JFrame frame;
-	private JTextField passwordField;
+	private JPasswordField passwordField;
 	private JButton btnNewButton_0;
 	private JButton btnNewButton_1 ;	
 	private JButton btnNewButton_2 ;
@@ -39,7 +39,13 @@ public class Pad extends JApplet{
 	private JButton btnNewButton_9;
 	private JButton btnNewButton_10;
 	private JButton btnNewButton_11;
-	private JButton btnNewButton;
+	
+	//--------------------------------------
+	private JButton btnNewButton_RANDOM;
+	private JButton btnNewButton_CANCEL;
+	private JButton btnNewButton_OK;
+	
+	//-------------------------------------
 	private String password="" ;
 	private JLabel lblDonnerVotreMot;
 	
@@ -69,13 +75,13 @@ public class Pad extends JApplet{
 	public Pad() {
 		sdcard = new SCard();//initialisation carte à puce 
 		 
-		init();
+		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	public void init() {
+	public void initialize() {
 		//frame = new JFrame();
 		 setBounds(100, 100, 450, 300);		  
 		 getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
@@ -115,24 +121,38 @@ public class Pad extends JApplet{
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
 		
+		//-----------------------------------------------
 		lblDonnerVotreMot = new JLabel("Donner votre mot de passe:");
 		lblDonnerVotreMot.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		getContentPane().add(lblDonnerVotreMot, "2, 1, 14, 3");
 		
-		passwordField = new JTextField();
+		//-----------------------------------------------
+		passwordField = new JPasswordField();
 		 getContentPane().add(passwordField, "2, 6, 12, 1, fill, default");
-		
-		btnNewButton = new JButton("Random");
-		btnNewButton.addActionListener(new ActionListener() {
+		 
+		//------------------RANDOM-----------------------------
+		btnNewButton_RANDOM = new JButton("Random");		
+		btnNewButton_RANDOM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				randVirtualPad();
 			}
 		});
-		 getContentPane().add(btnNewButton, "14, 12");
+		 getContentPane().add(btnNewButton_RANDOM, "14, 12");		
 		
-		
-		
-		//buttons
+		 
+		//------------------CANCEL-----------------------------
+		btnNewButton_CANCEL = new JButton("Cancel");
+			btnNewButton_CANCEL.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					password="";
+					passwordField.setText(password);
+				}
+			});
+		//	btnNewButton_CANCEL.setActionCommand("Cancel");
+			getContentPane().add(btnNewButton_CANCEL, "14, 16");
+			
+			
+		//-----------------------------------------------
 		btnNewButton_0 = new JButton("0");
 		btnNewButton_0.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -142,6 +162,7 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_0, "6, 16");
 		
+		//-----------------------------------------------
 		btnNewButton_1 = new JButton("1");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -151,6 +172,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_1, "8, 16");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_2 = new JButton("2");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -161,6 +184,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_2, "10, 16");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_3 = new JButton("3");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -171,6 +196,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_3, "6, 10");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_4 = new JButton("4");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -180,6 +207,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_4, "8, 10");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_5 = new JButton("5");
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -189,6 +218,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_5, "10, 10");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_6 = new JButton("6");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -198,6 +229,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_6, "6, 12");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_7 = new JButton("7");
 		btnNewButton_7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -207,6 +240,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_7, "8, 12");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_8 = new JButton("8");
 		btnNewButton_8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -216,6 +251,8 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_8, "10, 12");
 		
+		
+		//-----------------------------------------------
 		btnNewButton_9 = new JButton("9");
 		btnNewButton_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -225,7 +262,9 @@ public class Pad extends JApplet{
 		});
 	    getContentPane().add(btnNewButton_9, "6, 14");
 		
-		btnNewButton_10 = new JButton("10");
+	    
+	  //-----------------------------------------------
+		btnNewButton_10 = new JButton("#");
 		btnNewButton_10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				password= password+btnNewButton_10.getText();
@@ -234,7 +273,9 @@ public class Pad extends JApplet{
 		});
 		getContentPane().add(btnNewButton_10, "8, 14, center, default");
 		
-		btnNewButton_11 = new JButton("11");
+		
+		//-----------------------------------------------
+		btnNewButton_11 = new JButton("#");
 		btnNewButton_11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				password= password+btnNewButton_11.getText();
@@ -245,22 +286,11 @@ public class Pad extends JApplet{
 		
 	///////////////////////////////////////////////////////////////	
 		
-		JButton btnNewButton_CANCEL = new JButton("Cancel");
-		btnNewButton_CANCEL.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				password="";
-				passwordField.setText(password);
-			}
-		});
-		btnNewButton_CANCEL.setActionCommand("Cancel");
-		getContentPane().add(btnNewButton_CANCEL, "14, 16");
 		
 		
 		
-		
-		JButton btnNewButton_OK = new JButton("Ok");
-		btnNewButton_OK.setActionCommand("Ok");
-		getContentPane().add(btnNewButton_OK, "14, 10");	
+		btnNewButton_OK = new JButton("Ok");
+		btnNewButton_OK.setActionCommand("Ok");			
 		btnNewButton_OK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 //				
@@ -280,6 +310,9 @@ public class Pad extends JApplet{
 				System.out.println("1-password given: -->" +password);
 				char [] pwd = password.toCharArray();//passwordField.getPassword();
 				System.out.println("password given: -->" +new String(pwd));
+				
+				
+				
 				sdcard.waittingForCard();
 				int resp = sdcard.enterPin(pwd);
 			
@@ -408,11 +441,12 @@ public class Pad extends JApplet{
 //					textField.setVisible(false);
 					
 				}
+				
 			}
 			
 		});
 		
-	
+		getContentPane().add(btnNewButton_OK, "14, 10");
 		
 	/////////////////////////////////////////////////////////////
 		
@@ -441,11 +475,12 @@ public class Pad extends JApplet{
 		
 		 JButton [] pav = {btnNewButton_0, btnNewButton_1, btnNewButton_2,  btnNewButton_3, btnNewButton_4 , btnNewButton_5, btnNewButton_6, btnNewButton_7, btnNewButton_8, btnNewButton_9, btnNewButton_10 , btnNewButton_11} ;
 		 int val ;
-		for ( int i=0 ; i< pav.length ; i++){
-			 
-			pav[i].setText("");
-			
-		}
+//		for ( int i=0 ; i< pav.length ; i++){
+//			 
+//			pav[i].setText("");
+//			pav[i].repaint();
+//			
+//		}
 		
 		 
 	ArrayList <String> tab = new ArrayList<String>();
@@ -456,7 +491,7 @@ public class Pad extends JApplet{
 	 while( j < 12)
 		{
 			
-		   System.out.println("main --> j : "+ j);
+		   //System.out.println("main --> j : "+ j);
 		    val = (int)(Math.random()*10);
 			 
 			//if the value is not already given
@@ -465,7 +500,8 @@ public class Pad extends JApplet{
 				System.out.println("yes --> j : "+ j);
 				
 				tab.add(""+val);
-				pav[j].setText(""+val);			
+				pav[j].setText(""+val);	
+				//pav[j].repaint();
 				j++;
 			}
 			
@@ -474,8 +510,9 @@ public class Pad extends JApplet{
 				//if the meaninig values are given
 				if ( j > 9)
 				{
-					System.out.println("else yes --> j : "+ j);
+					//System.out.println("else yes --> j : "+ j);
 					pav[j].setText("#");
+					//pav[j].repaint();
 					j++;
 				}
 					
@@ -486,7 +523,7 @@ public class Pad extends JApplet{
 	 tab.clear();
 	 System.out.println("END --> j : "+ j);
 	 
-	// getContentPane().repaint();
+	 //getContentPane().repaint();
 	}
 	
 	
