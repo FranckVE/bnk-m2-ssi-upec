@@ -270,12 +270,12 @@ public class ClientChallenge {
 		this.bankPublicExponent = bankPubExponent;
 	}
 
-//public static void main(String [] args){
+public static void main(String [] args){
 //	//récupérer le context de la page
 //	Challenge challenge = new Challenge("test".getBytes(),"test".getBytes());
 //	  challenge.build();
-// 
-//}
+ 
+}
 	
  
 }

@@ -19,14 +19,15 @@ import java.net.URL;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.JInternalFrame;
 
 
 
 public class Login extends JApplet {
 	
-	private JPasswordField passwordField;
+	public JPasswordField passwordField;
 	private JLabel lblPleaseEnterYour;
-	private JButton btnNewButton ;
+	public JButton btnNewButton ;
 	private JButton btnCancell ;
 	private JTextField textField;
 	private int tries = 3 ;
@@ -271,9 +272,4 @@ private void store(byte [] signature, String path){
 		e.printStackTrace();
 	}
 }
-
-
-  
-
-
 }
