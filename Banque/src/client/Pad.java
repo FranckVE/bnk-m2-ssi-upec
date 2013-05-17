@@ -22,6 +22,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import net.miginfocom.swing.MigLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class Pad extends JApplet{
 
@@ -53,6 +62,7 @@ public class Pad extends JApplet{
 	
 	private SCard sdcard;
 	private int tries = 3 ;
+	private JTextField textField;
 	/**
 	 * Launch the application.
 	 */
@@ -83,112 +93,31 @@ public class Pad extends JApplet{
 	 */
 	public void initialize() {
 		//frame = new JFrame();
-		 setBounds(100, 100, 450, 300);		  
-		 getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),},
-			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
+		 setBounds(100, 100, 450, 300);
+		
 		
 		//-----------------------------------------------
-		lblDonnerVotreMot = new JLabel("Donner votre mot de passe:");
-		lblDonnerVotreMot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		getContentPane().add(lblDonnerVotreMot, "2, 1, 14, 3");
-		
-		//-----------------------------------------------
-		passwordField = new JPasswordField();
-		 getContentPane().add(passwordField, "2, 6, 12, 1, fill, default");
-		 
-		//------------------RANDOM-----------------------------
-		btnNewButton_RANDOM = new JButton("Random");		
-		btnNewButton_RANDOM.addActionListener(new ActionListener() {
+		btnNewButton_8 = new JButton("8");
+		btnNewButton_8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				randVirtualPad();
-			}
-		});
-		 getContentPane().add(btnNewButton_RANDOM, "14, 12");		
-		
-		 
-		//------------------CANCEL-----------------------------
-		btnNewButton_CANCEL = new JButton("Cancel");
-			btnNewButton_CANCEL.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					password="";
-					passwordField.setText(password);
-				}
-			});
-		//	btnNewButton_CANCEL.setActionCommand("Cancel");
-			getContentPane().add(btnNewButton_CANCEL, "14, 16");
-			
-			
-		//-----------------------------------------------
-		btnNewButton_0 = new JButton("0");
-		btnNewButton_0.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_0.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_0.getText();
+				if(! btnNewButton_8.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_8.getText();
 				passwordField.setText(password);
 				}
 			}
 		});
-		getContentPane().add(btnNewButton_0, "6, 16");
+		
 		
 		//-----------------------------------------------
-		btnNewButton_1 = new JButton("1");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		btnNewButton_5 = new JButton("5");
+		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_1.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_1.getText();
+				if(! btnNewButton_5.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_5.getText();
 				passwordField.setText(password);
 				}
 			}
 		});
-		getContentPane().add(btnNewButton_1, "8, 16");
-		
-		
-		//-----------------------------------------------
-		btnNewButton_2 = new JButton("2");
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_2.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_2.getText();
-				passwordField.setText(password);
-				}
-			}
-			
-		});
-		getContentPane().add(btnNewButton_2, "10, 16");
 		
 		
 		//-----------------------------------------------
@@ -202,7 +131,18 @@ public class Pad extends JApplet{
 				
 			}
 		});
-		getContentPane().add(btnNewButton_3, "6, 10");
+		getContentPane().setLayout(new MigLayout("", "[39px][5px][39px][5px][39px][5px][71px]", "[17px][20px][23px][23px][23px][23px][94px]"));
+		
+		//-----------------------------------------------
+		lblDonnerVotreMot = new JLabel("Donner votre mot de passe:");
+		lblDonnerVotreMot.setForeground(new Color(0, 128, 0));
+		lblDonnerVotreMot.setFont(new Font("Tahoma", Font.BOLD, 14));
+		getContentPane().add(lblDonnerVotreMot, "cell 0 0 7 1,growx,aligny top");
+		
+		//-----------------------------------------------
+		passwordField = new JPasswordField();
+		getContentPane().add(passwordField, "cell 0 1 5 1,growx,aligny top");
+		getContentPane().add(btnNewButton_3, "cell 0 2,growx,aligny top");
 		
 		
 		//-----------------------------------------------
@@ -215,33 +155,8 @@ public class Pad extends JApplet{
 				}
 			}
 		});
-		getContentPane().add(btnNewButton_4, "8, 10");
-		
-		
-		//-----------------------------------------------
-		btnNewButton_5 = new JButton("5");
-		btnNewButton_5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_5.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_5.getText();
-				passwordField.setText(password);
-				}
-			}
-		});
-		getContentPane().add(btnNewButton_5, "10, 10");
-		
-		
-		//-----------------------------------------------
-		btnNewButton_6 = new JButton("6");
-		btnNewButton_6.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_6.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_6.getText();
-				passwordField.setText(password);
-				}
-			}
-		});
-		getContentPane().add(btnNewButton_6, "6, 12");
+		getContentPane().add(btnNewButton_4, "cell 2 2,growx,aligny top");
+		getContentPane().add(btnNewButton_5, "cell 4 2,growx,aligny top");
 		
 		
 		//-----------------------------------------------
@@ -254,63 +169,6 @@ public class Pad extends JApplet{
 				}
 			}
 		});
-		getContentPane().add(btnNewButton_7, "8, 12");
-		
-		
-		//-----------------------------------------------
-		btnNewButton_8 = new JButton("8");
-		btnNewButton_8.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_8.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_8.getText();
-				passwordField.setText(password);
-				}
-			}
-		});
-		getContentPane().add(btnNewButton_8, "10, 12");
-		
-		
-		//-----------------------------------------------
-		btnNewButton_9 = new JButton("9");
-		btnNewButton_9.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_9.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_9.getText();
-				passwordField.setText(password);
-				}
-			}
-		});
-	    getContentPane().add(btnNewButton_9, "6, 14");
-		
-	    
-	  //-----------------------------------------------
-		btnNewButton_10 = new JButton(" ");
-		btnNewButton_10.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_10.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_10.getText();
-				passwordField.setText(password);
-				}
-			}
-		});
-		getContentPane().add(btnNewButton_10, "8, 14, center, default");
-		
-		
-		//-----------------------------------------------
-		btnNewButton_11 = new JButton(" ");
-		btnNewButton_11.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(! btnNewButton_11.getText().equals(" ")){ // si différent de espace
-				password= password+btnNewButton_11.getText();
-				passwordField.setText(password);
-				}
-			}
-		});
-		getContentPane().add(btnNewButton_11, "10, 14");
-		
-	///////////////////////////////////////////////////////////////	
-		
-		
 		
 		
 		btnNewButton_OK = new JButton("Ok");
@@ -348,14 +206,30 @@ public class Pad extends JApplet{
 					System.out.println("login: --> "+login);
 					System.out.println("password: -->"+passwd);
 					
-//					lblPleaseEnterYour.setForeground(Color.blue);
-//					lblPleaseEnterYour.setText("Authentification de la carte réussie");
-//					
-//					//textPane.setText("Authentication success");// on modifie le contenu du JLabel
-//					passwordField.setVisible(false);
-//					btnCancell.setVisible(false);
-//					btnNewButton.setVisible(false);
-//					textField.setVisible(false);
+					lblDonnerVotreMot.setForeground(Color.blue);
+					lblDonnerVotreMot.setText("Authentification de la carte réussie");
+					
+					//adapter l'affichage----------------------------
+					 passwordField.setVisible(false);
+					 btnNewButton_0.setVisible(false);;
+					 btnNewButton_1.setVisible(false); ;	
+					 btnNewButton_2.setVisible(false); ;
+					 btnNewButton_3.setVisible(false); ;
+					 btnNewButton_4.setVisible(false); ;
+					 btnNewButton_5.setVisible(false);;
+					 btnNewButton_6.setVisible(false);;
+					 btnNewButton_7.setVisible(false); ;
+					 btnNewButton_8.setVisible(false); ;
+					 btnNewButton_9.setVisible(false);;
+					 btnNewButton_10.setVisible(false);;
+					 btnNewButton_11.setVisible(false);;
+					 textField.setVisible(false);
+					//--------------------------------------
+					 btnNewButton_RANDOM.setVisible(false);;
+					 btnNewButton_CANCEL.setVisible(false);;
+					 btnNewButton_OK.setVisible(false);;
+					
+		 
 					//ici on procède à notre traitement qui consiste à signer le hash du mot de passe du client
 					//générer une clé de session de 16 octets
 					//chiffrer : login+clé de session+SHA1(pwd)+SIG avec la clé publique de la banque
@@ -430,19 +304,36 @@ public class Pad extends JApplet{
 				if ( resp == 2 )
 				{ // echec d'authentification
 					System.out.println("Echec d'authentification !!!");
-				//	textField.setVisible(true);
+					textField.setVisible(true);
 					
 					tries -- ;
-//					lblPleaseEnterYour.setText("Rentrer votre mot de passe: ("+tries+" essai(s) restant)");
-//					textField.setText("Echec d'authentification: "+tries+ " essai(s) restant!");
+					lblDonnerVotreMot.setText("Rentrer votre mot de passe: ("+tries+" essai(s) restant)");
+					textField.setText("Echec d'authentification: "+tries+ " essai(s) restant!");
 					
 					if ( tries == 0 ) //on désactive tout, on affiche carte bloquée
 					{
-//					passwordField.setVisible(false);
-//					btnCancell.setVisible(false);
-//					btnNewButton.setVisible(false);
-//					textField.setVisible(false);
-//					lblPleaseEnterYour.setText("Carte bloquée: merci de contacter votre conseiller !!!");
+						//adapter l'affichage----------------------------
+						 passwordField.setVisible(false);
+						 btnNewButton_0.setVisible(false);;
+						 btnNewButton_1.setVisible(false); ;	
+						 btnNewButton_2.setVisible(false); ;
+						 btnNewButton_3.setVisible(false); ;
+						 btnNewButton_4.setVisible(false); ;
+						 btnNewButton_5.setVisible(false);;
+						 btnNewButton_6.setVisible(false);;
+						 btnNewButton_7.setVisible(false); ;
+						 btnNewButton_8.setVisible(false); ;
+						 btnNewButton_9.setVisible(false);;
+						 btnNewButton_10.setVisible(false);;
+						 btnNewButton_11.setVisible(false);;
+						
+						//--------------------------------------
+						 btnNewButton_RANDOM.setVisible(false);;
+						 btnNewButton_CANCEL.setVisible(false);;
+						 btnNewButton_OK.setVisible(false);;
+						
+					textField.setVisible(false);
+					lblDonnerVotreMot.setText("Carte bloquée: merci de contacter votre conseiller !!!");
 					
 					}
 					
@@ -455,22 +346,166 @@ public class Pad extends JApplet{
 					
                      System.out.println("Carte bloquée!!!");
 					
-//					lblPleaseEnterYour.setForeground(Color.RED);
-//					lblPleaseEnterYour.setText("Carte bloquée: merci de contacter votre conseiller !!!");
-//					
-//					//textPane.setText("Authentication success");// on modifie le contenu du JLabel
-//					passwordField.setVisible(false);
-//					btnCancell.setVisible(false);
-//					btnNewButton.setVisible(false);
-//					textField.setVisible(false);
+                     lblDonnerVotreMot.setForeground(Color.RED);
+                     lblDonnerVotreMot.setText("Carte bloquée: merci de contacter votre conseiller !!!");
+					
+					//adapter l'affichage----------------------------
+					 passwordField.setVisible(false);
+					 btnNewButton_0.setVisible(false);;
+					 btnNewButton_1.setVisible(false); ;	
+					 btnNewButton_2.setVisible(false); ;
+					 btnNewButton_3.setVisible(false); ;
+					 btnNewButton_4.setVisible(false); ;
+					 btnNewButton_5.setVisible(false);;
+					 btnNewButton_6.setVisible(false);;
+					 btnNewButton_7.setVisible(false); ;
+					 btnNewButton_8.setVisible(false); ;
+					 btnNewButton_9.setVisible(false);;
+					 btnNewButton_10.setVisible(false);;
+					 btnNewButton_11.setVisible(false);;
+					
+					//--------------------------------------
+					 btnNewButton_RANDOM.setVisible(false);;
+					 btnNewButton_CANCEL.setVisible(false);;
+					 btnNewButton_OK.setVisible(false);;
+					
+					textField.setVisible(false);
 					
 				}
 				
 			}
 			
 		});
+		getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblDonnerVotreMot, passwordField, btnNewButton_RANDOM, btnNewButton_CANCEL, btnNewButton_0, btnNewButton_1, btnNewButton_2, btnNewButton_3, btnNewButton_4, btnNewButton_5, btnNewButton_6, btnNewButton_7, btnNewButton_8, btnNewButton_9, btnNewButton_10, btnNewButton_11, textField, btnNewButton_OK}));
+		getContentPane().add(btnNewButton_OK, "cell 6 2,alignx left,aligny top");
 		
-		getContentPane().add(btnNewButton_OK, "14, 10");
+		
+		//-----------------------------------------------
+		btnNewButton_6 = new JButton("6");
+		btnNewButton_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_6.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_6.getText();
+				passwordField.setText(password);
+				}
+			}
+		});
+		getContentPane().add(btnNewButton_6, "cell 0 3,growx,aligny top");
+		getContentPane().add(btnNewButton_7, "cell 2 3,growx,aligny top");
+		getContentPane().add(btnNewButton_8, "cell 4 3,growx,aligny top");
+		
+		 
+		//------------------CANCEL-----------------------------
+		btnNewButton_CANCEL = new JButton("Cancel");
+		btnNewButton_CANCEL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				password="";
+				passwordField.setText(password);
+			}
+		});
+		
+		//------------------RANDOM-----------------------------
+		btnNewButton_RANDOM = new JButton("Random");
+		btnNewButton_RANDOM.setToolTipText("");
+		btnNewButton_RANDOM.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				randVirtualPad();
+			}
+		});
+		getContentPane().add(btnNewButton_RANDOM, "cell 6 3,alignx left,aligny top");
+		
+	    
+	  //-----------------------------------------------
+		btnNewButton_10 = new JButton(" ");
+		btnNewButton_10.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_10.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_10.getText();
+				passwordField.setText(password);
+				}
+			}
+		});
+		
+		
+		//-----------------------------------------------
+		btnNewButton_9 = new JButton("9");
+		btnNewButton_9.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_9.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_9.getText();
+				passwordField.setText(password);
+				}
+			}
+		});
+		getContentPane().add(btnNewButton_9, "cell 0 4,growx,aligny top");
+		getContentPane().add(btnNewButton_10, "cell 2 4,growx,aligny top");
+		
+		
+		//-----------------------------------------------
+		btnNewButton_0 = new JButton("0");
+		btnNewButton_0.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_0.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_0.getText();
+				passwordField.setText(password);
+				}
+			}
+		});
+		
+		
+		//-----------------------------------------------
+		btnNewButton_11 = new JButton(" ");
+		btnNewButton_11.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_11.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_11.getText();
+				passwordField.setText(password);
+				}
+			}
+		});
+		getContentPane().add(btnNewButton_11, "cell 4 4,growx,aligny top");
+		getContentPane().add(btnNewButton_0, "cell 0 5,growx,aligny top");
+		
+		
+		//-----------------------------------------------
+		btnNewButton_2 = new JButton("2");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_2.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_2.getText();
+				passwordField.setText(password);
+				}
+			}
+			
+		});
+		
+		//-----------------------------------------------
+		btnNewButton_1 = new JButton("1");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! btnNewButton_1.getText().equals(" ")){ // si différent de espace
+				password= password+btnNewButton_1.getText();
+				passwordField.setText(password);
+				}
+			}
+		});
+		getContentPane().add(btnNewButton_1, "cell 2 5,growx,aligny top");
+		getContentPane().add(btnNewButton_2, "cell 4 5,growx,aligny top");
+		getContentPane().add(btnNewButton_CANCEL, "cell 6 5,alignx left,aligny top");
+		
+	///////////////////////////////////////////////////////////////	
+		
+		//----------------- textfield ----
+		
+		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.BOLD, 12));
+		textField.setForeground(new Color(255, 0, 0));
+		textField.setBackground(new Color(50, 205, 50));
+		textField.setColumns(10);
+		getContentPane().add(textField, "cell 0 6 7 1,grow");
+		textField.setVisible(false);
+		
+		
 		
 	/////////////////////////////////////////////////////////////
 		
@@ -555,9 +590,4 @@ public class Pad extends JApplet{
 	 
 	 //getContentPane().repaint();
 	}
-	
-	
-	
-	
-
 }
