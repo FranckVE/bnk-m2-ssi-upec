@@ -1,27 +1,14 @@
 package bank;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+ 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.util.encoders.UrlBase64;
-
 import cryptos.CryptoUtils;
 
 public class BankChallenge {
-	// cette constante réfère l'endroits ou est stocké la signature du mot de
-	// passe.
-	// private static String signaturePath="C:/temp/signaturePWD.sig";
-	// //cette constante réfère l'endroits ou est stocké la signature du mot de
-	// passe.
-	// private static String bankPubModulusPath="C:/temp/bankModulus.key";
-	// private static String bankPubExponentPath="C:/temp/bankExponent.key";
+	 
 	private byte[] login;
 	private SecretKey DES3Key;
 	private byte[] passwordSHA1;
@@ -127,7 +114,7 @@ public class BankChallenge {
 			(byte) 0x01 };
 
 	public BankChallenge() {
-		util = new CryptoUtils();
+		setUtil(new CryptoUtils());
 	}
 
 	public boolean verify(String tokenBase64) {
@@ -195,32 +182,7 @@ public class BankChallenge {
 
 	}
 
-	private byte[] loadFileAndDelete(String path) {
-		FileInputStream fis = null;
-
-		// Read Public Key.
-		File file = new File(path);
-		try {
-			fis = new FileInputStream(path);
-
-			byte[] tab = new byte[(int) file.length()];
-
-			fis.read(tab);
-			fis.close();
-
-			return tab;
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	
+	  
 	
 	
 	
@@ -253,6 +215,14 @@ public class BankChallenge {
 
 	public byte[] getBankPubModulus() {
 		return getBankPubModulus();
+	}
+
+	public CryptoUtils getUtil() {
+		return util;
+	}
+
+	public void setUtil(CryptoUtils util) {
+		this.util = util;
 	}
 
 	 

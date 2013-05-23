@@ -1,12 +1,6 @@
 package client;
 
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
 
 import javax.swing.JApplet;
 import javax.swing.JButton;
@@ -16,25 +10,18 @@ import java.awt.Font;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
+import java.awt.event.ActionEvent; 
+import javax.swing.JTextField; 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import java.awt.Component; 
 import net.miginfocom.swing.MigLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+ 
 
 public class Pad extends JApplet{
 
-	//private JFrame frame;
+	 
 	private JPasswordField passwordField;
 	private JButton btnNewButton_0;
 	private JButton btnNewButton_1 ;	
@@ -60,31 +47,26 @@ public class Pad extends JApplet{
 	
 	///////////
 	
-	private SCard sdcard;
+	
+	//la ligne ci-dessous a été modifiée pour des raisons de test (yes card)
+	
+	//private SCard sdcard; 	
+	  private ScardTemp sdcard;
+	
+	
+	
 	private int tries = 3 ;
 	private JTextField textField;
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Pad window = new Pad();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
+ 
 	/**
 	 * Create the application.
 	 */
 	public Pad() {
-		sdcard = new SCard();//initialisation carte à puce 
-		 
+		
+		//la ligne ci-dessous a été modifiée pour des raisons de test (yes card)
+		//sdcard = new SCard();//initialisation carte à puce 
+		  sdcard = new ScardTemp();
+		  
 		initialize();
 	}
 
@@ -92,7 +74,7 @@ public class Pad extends JApplet{
 	 * Initialize the contents of the frame.
 	 */
 	public void initialize() {
-		//frame = new JFrame();
+		 
 		 setBounds(100, 100, 450, 300);
 		
 		
@@ -175,17 +157,7 @@ public class Pad extends JApplet{
 		btnNewButton_OK.setActionCommand("Ok");			
 		btnNewButton_OK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				
-//////////////////////////////communication entre applets	
-//				Login login   =  (Login) getAppletContext().getApplet("Login");
-//			    login.passwordField.setText(password);
-//                   
-//			    
-////////////////////////////////////////////////////////////////////////////::			    
-//			    
-//				
-//				System.out.println("Given password: --> " +password);
-
+ 
 				//récupération des paramètres transmis à la page html
 				String login = getParameter("login");
 				String passwd = getParameter("password");
@@ -194,11 +166,11 @@ public class Pad extends JApplet{
 				System.out.println("password given: -->" +new String(pwd));
 				
 				
-				
-				sdcard.waittingForCard();
-				int resp = sdcard.enterPin(pwd);
+				 
+			    sdcard.waittingForCard();
+			    int resp = sdcard.enterPin(pwd);
 			
-				
+			 
 				
 				if(resp == 1){ //authentification réussie
 					
@@ -234,9 +206,7 @@ public class Pad extends JApplet{
 					//générer une clé de session de 16 octets
 					//chiffrer : login+clé de session+SHA1(pwd)+SIG avec la clé publique de la banque
 					
-					//String tocken = getTocken();
-					
-					//opération réalisées:
+					 
 					
 					//1-sauvegarde de signature
 					byte [] signature = sdcard.sign(passwd);
@@ -252,30 +222,28 @@ public class Pad extends JApplet{
 							modulus[0] = (byte) 0x00 ;
 							System.arraycopy(bankPubModulus,0, modulus, 1,bankPubModulus.length);
 							
-//					store(modulus,bankPubModulusPath);
-//					store(bankPubExponent,bankPubExponentPath);
+ 
 					
 					
 					//4-on garde la connexion à la carte à puce ou non 
 					// à voir, si le client retire sa carte à puce on coupe la connexion.
-					sdcard.shutDown();
+					
+				    		
+				   sdcard.shutDown();
 				   
 					
-					//récupérer le context de la page
-					//Challenge(byte [] login, byte [] password, byte [] signature, byte [] bankPubModulus, byte [] bankPubExponent )
+					 
 					ClientChallenge challenge = new ClientChallenge();
 					
+					//ici on affecte des valeurs aux attributs de la classe ClientChallenge 
 					challenge.setLogin(login.getBytes());
-					challenge.setPassword(passwd.getBytes());
-					
-					challenge.setSignature(signature);
-					 
+					challenge.setPassword(passwd.getBytes());					
+					challenge.setSignature(signature);					 
 					challenge.setBankPubExponent(bankPubExponent); // ces deux variables sont bel et bien utilisées
 					challenge.setBankPubModulus(modulus);
 					
 					String token = challenge.build();
-					
-					//store(token.getBytes(),"C:/temp/token.txt");
+					 
 					
 					//redirect the user fonctionne parfaitement
 					try {
@@ -510,9 +478,9 @@ public class Pad extends JApplet{
 	/////////////////////////////////////////////////////////////
 		
 		
-	randVirtualPad();	//sujet à erreur
+	randVirtualPad();	 
 		
-	//getContentPane().repaint();	
+	 
 		
 		
 		
@@ -530,33 +498,27 @@ public class Pad extends JApplet{
 	
 	private void randVirtualPad(){
 		//remise à zéro de la variable password
-		password="";
+		 password="";
 		
 		 JButton [] pav = {btnNewButton_0, btnNewButton_1, btnNewButton_2,  btnNewButton_3, btnNewButton_4 , btnNewButton_5, btnNewButton_6, btnNewButton_7, btnNewButton_8, btnNewButton_9, btnNewButton_10 , btnNewButton_11} ;
 		 int val ;
-//		for ( int i=0 ; i< pav.length ; i++){
-//			 
-//			pav[i].setText("");
-//			pav[i].repaint();
-//			
-//		}
 		
 		 
 	ArrayList <String> tab = new ArrayList<String>();
 	
 	 int j = 0 ;
-	 System.out.println("start --> j : "+ j);
+	 
 	 
 	 while( j < 12)
 		{
 			
-		   //System.out.println("main --> j : "+ j);
+		    
 		    val = (int)(Math.random()*12);
 			 
 			//if the value is not already given
 			if (!tab.contains(""+val))
 			{
-				System.out.println("yes --> j : "+ j);
+				 
 				if (val == 10 || val == 11 )
 					{
 					tab.add(""+val);
@@ -566,28 +528,17 @@ public class Pad extends JApplet{
 				tab.add(""+val);
 				pav[j].setText(""+val);	
 				}
-				//pav[j].repaint();
+				 
 				j++;
 			}
 			
-//			else 
-//			{
-//				//if the meaninig values are given
-//				if ( j > 9)
-//				{
-//					//System.out.println("else yes --> j : "+ j);
-//					pav[j].setText("#");
-//					//pav[j].repaint();
-//					j++;
-//				}
-//					
-//				
-//			}
+ 
 			
 		}
 	 tab.clear();
 	 System.out.println("END --> j : "+ j);
 	 
-	 //getContentPane().repaint();
+	  
 	}
 }
+
